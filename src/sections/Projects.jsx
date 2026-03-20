@@ -54,7 +54,7 @@ const projects = [
     id: 5,
     title: 'Button Dodger',
     category: 'Chrome Extension',
-    image: '/get-rekt.png',
+    image: 'get-rekt.png',
     year: '2025',
     description: 'A playful browser extension that makes buttons dodge your cursor, turning simple clicks into a hilarious challenge. Perfect for pranking friends and adding chaos to everyday browsing.',
     tags: ['JavaScript', 'Chrome Extension', 'Fun Tool', 'UI Manipulation'],
