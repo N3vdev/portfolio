@@ -15,74 +15,67 @@ export default function Contact() {
   return (
     <>
       <style>{`
-        .contact { min-height: 100vh; background: #060609; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 8rem 2.5rem; }
+        .contact { min-height: 100vh; background: transparent; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 8rem 2.5rem; }
         .c-grid { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); }
-        .c-orb { position: absolute; width: 600px; height: 400px; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse, rgba(123,47,247,.045) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .c-orb { position: absolute; width: 600px; height: 400px; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse, rgba(123,47,247,.05) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
         .c-inner { position: relative; z-index: 2; max-width: 1320px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-        .c-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem,6vw,4.4rem); font-weight: 800; color: #fff; line-height: .9; letter-spacing: -.04em; margin: 1.1rem 0 1.5rem; }
-        .c-sub { font-family: 'DM Sans', sans-serif; font-size: .93rem; line-height: 1.82; color: rgba(255,255,255,.26); font-weight: 300; }
+        .c-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem,6vw,4.4rem); font-weight: 800; color: #fff; line-height: .9; letter-spacing: -.04em; margin: 1.1rem 0 1.5rem; text-shadow: 0 2px 12px rgba(0,0,0,.5); }
+        .c-sub { font-family: 'DM Sans', sans-serif; font-size: .93rem; line-height: 1.82; color: rgba(255,255,255,.55); font-weight: 300; }
         .c-right { display: flex; flex-direction: column; gap: .75rem; padding-top: .5rem; }
 
-        .email-card { display: flex; align-items: center; gap: .9rem; background: rgba(255,255,255,.022); border: 1px solid rgba(255,255,255,.07); border-radius: 18px; padding: 1.1rem 1.4rem; cursor: pointer; position: relative; transition: all .32s; }
-        .email-card:hover { background: rgba(123,47,247,.06); border-color: rgba(123,47,247,.2); transform: translateY(-2px); }
-        .eico { width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0; background: rgba(123,47,247,.11); border: 1px solid rgba(123,47,247,.15); display: flex; align-items: center; justify-content: center; color: rgba(155,100,240,.9); }
-        .etxt { font-family: 'DM Mono', monospace; font-size: .8rem; letter-spacing: .02em; color: rgba(255,255,255,.62); display: block; text-align: left; }
-        .ehint { font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.15); transition: color .28s; display: block; margin-top: .16rem; }
-        .email-card:hover .ehint { color: rgba(155,100,240,.5); }
+        /* ── Glass cards ── */
+        .email-card {
+          display: flex; align-items: center; gap: .9rem;
+          background: rgba(8,8,16,0.68);
+          backdrop-filter: blur(20px) saturate(160%);
+          -webkit-backdrop-filter: blur(20px) saturate(160%);
+          border: 1px solid rgba(255,255,255,.1);
+          border-radius: 18px; padding: 1.1rem 1.4rem; cursor: pointer; position: relative; transition: all .32s;
+          box-shadow: 0 4px 20px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.05);
+        }
+        .email-card:hover { background: rgba(123,47,247,.12); border-color: rgba(123,47,247,.28); transform: translateY(-2px); box-shadow: 0 8px 28px rgba(0,0,0,.4), 0 0 20px rgba(123,47,247,.15); }
+        .eico { width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0; background: rgba(123,47,247,.18); border: 1px solid rgba(123,47,247,.25); display: flex; align-items: center; justify-content: center; color: rgba(180,130,255,1); }
+        .etxt { font-family: 'DM Mono', monospace; font-size: .8rem; letter-spacing: .02em; color: rgba(255,255,255,.82); display: block; text-align: left; }
+        .ehint { font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); transition: color .28s; display: block; margin-top: .16rem; }
+        .email-card:hover .ehint { color: rgba(180,130,255,.7); }
         .ctoast { position: absolute; top: -2.3rem; left: 50%; transform: translateX(-50%); font-family: 'DM Mono', monospace; font-size: .58rem; letter-spacing: .1em; background: #7B2FF7; color: #fff; padding: .26rem .78rem; border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .22s; pointer-events: none; }
         .ctoast.show { opacity: 1; }
 
-        .socials-label { font-family: 'DM Mono', monospace; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.16); margin-bottom: .55rem; }
         .socials { display: flex; gap: .55rem; }
-        .sb { height: 44px; padding: 0 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.018); display: flex; align-items: center; gap: .52rem; color: rgba(255,255,255,.3); text-decoration: none; transition: all .26s; font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; }
-        .sb:hover { border-color: rgba(123,47,247,.28); color: #fff; background: rgba(123,47,247,.08); transform: translateY(-2px); }
+        .sb {
+          height: 44px; padding: 0 1.1rem; border-radius: 12px;
+          border: 1px solid rgba(255,255,255,.1);
+          background: rgba(8,8,16,0.65);
+          backdrop-filter: blur(16px);
+          display: flex; align-items: center; gap: .52rem; color: rgba(255,255,255,.55); text-decoration: none; transition: all .26s; font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .06em; text-transform: uppercase;
+          box-shadow: 0 2px 12px rgba(0,0,0,.3), inset 0 1px 0 rgba(255,255,255,.04);
+        }
+        .sb:hover { border-color: rgba(123,47,247,.35); color: #fff; background: rgba(123,47,247,.12); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,.35), 0 0 14px rgba(123,47,247,.2); }
 
-        .avail-card { background: rgba(61,219,133,.04); border: 1px solid rgba(61,219,133,.12); border-radius: 18px; padding: 1.15rem 1.4rem; display: flex; align-items: center; gap: .9rem; }
+        .avail-card {
+          background: rgba(8,24,16,0.65);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          border: 1px solid rgba(61,219,133,.18); border-radius: 18px; padding: 1.15rem 1.4rem; display: flex; align-items: center; gap: .9rem;
+          box-shadow: 0 4px 20px rgba(0,0,0,.3), inset 0 1px 0 rgba(61,219,133,.05);
+        }
         .avail-dot { width: 7px; height: 7px; border-radius: 50%; background: #3DDB85; flex-shrink: 0; box-shadow: 0 0 0 0 rgba(61,219,133,.4); animation: pr2 2.6s ease infinite; }
         @keyframes pr2 { 0% { box-shadow: 0 0 0 0 rgba(61,219,133,.35); } 70% { box-shadow: 0 0 0 8px rgba(61,219,133,0); } 100% { box-shadow: 0 0 0 0 rgba(61,219,133,0); } }
-        .avail-txt { font-family: 'DM Sans', sans-serif; font-size: .82rem; color: rgba(255,255,255,.4); font-weight: 300; }
+        .avail-txt { font-family: 'DM Sans', sans-serif; font-size: .82rem; color: rgba(255,255,255,.55); font-weight: 300; }
         .avail-txt b { color: #3DDB85; font-weight: 500; }
-        .c-footer { margin-top: 2rem; font-family: 'DM Mono', monospace; font-size: .57rem; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.09); }
+        .c-footer { margin-top: 2rem; font-family: 'DM Mono', monospace; font-size: .57rem; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.2); }
 
-        /* ── Mobile ── */
         @media(max-width: 760px) {
-          .contact {
-            padding: 6rem 1.4rem 4rem;
-            align-items: flex-start;
-            margin-top: 1.5rem;
-          }
-          .c-inner {
-            grid-template-columns: 1fr;
-            gap: 2.4rem;
-          }
-          .c-h2 {
-            font-size: clamp(2.2rem, 11vw, 3.2rem);
-            margin: .8rem 0 1rem;
-          }
-          .c-sub {
-            font-size: .88rem;
-          }
-          .c-right {
-            padding-top: 0;
-            gap: .65rem;
-          }
-          .email-card {
-            padding: .95rem 1.1rem;
-          }
-          .etxt {
-            font-size: .72rem;
-          }
-          .socials {
-            flex-wrap: wrap;
-          }
-          .sb {
-            flex: 1;
-            justify-content: center;
-            min-width: 100px;
-          }
-          .c-footer {
-            margin-top: 1.2rem;
-          }
+          .contact { padding: 6rem 1.4rem 4rem; align-items: flex-start; }
+          .c-inner { grid-template-columns: 1fr; gap: 2.4rem; }
+          .c-h2 { font-size: clamp(2.2rem, 11vw, 3.2rem); margin: .8rem 0 1rem; }
+          .c-sub { font-size: .88rem; }
+          .c-right { padding-top: 0; gap: .65rem; }
+          .email-card { padding: .95rem 1.1rem; }
+          .etxt { font-size: .72rem; }
+          .socials { flex-wrap: wrap; }
+          .sb { flex: 1; justify-content: center; min-width: 100px; }
+          .c-footer { margin-top: 1.2rem; }
         }
       `}</style>
 
@@ -92,20 +85,20 @@ export default function Contact() {
         <div className="noise" />
 
         <div className="c-inner">
-          {/* Left: headline */}
           <div>
             <div className={`fu${v ? " in" : ""}`}><span className="eyebrow">Get In Touch</span></div>
             <h2 className={`c-h2 fu d1${v ? " in" : ""}`}>Have a<br />project<br />in mind?</h2>
             <p className={`c-sub fu d2${v ? " in" : ""}`}>
               Let's make it happen — I'm open to freelance work, collaborations, and full-time opportunities.
             </p>
-            
           </div>
 
-          {/* Right: actions */}
           <div className={`c-right fu d2${v ? " in" : ""}`}>
+            <div className="avail-card">
+              <div className="avail-dot" />
+              <div className="avail-txt"><b>Available for work</b> — Open to new projects in 2026</div>
+            </div>
 
-            {/* Email */}
             <div style={{ position: "relative" }}>
               <div className="email-card" onClick={copy}>
                 <div className="eico">
@@ -122,9 +115,7 @@ export default function Contact() {
               </div>
             </div>
 
-            {/* Socials */}
             <div>
-
               <div className="socials">
                 <a href="https://github.com/n3vdev" target="_blank" rel="noreferrer" className="sb">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -132,14 +123,19 @@ export default function Contact() {
                   </svg>
                   GitHub
                 </a>
-
+                <a href="mailto:nevinabraham77@gmail.com" className="sb">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                  Email
+                </a>
               </div>
-              
             </div>
           </div>
+
           <div className={`c-footer fu d5${v ? " in" : ""}`}>© 2026 Nevin Abraham</div>
         </div>
-        
       </section>
     </>
   );
