@@ -44,35 +44,46 @@ export default function Contact() {
         .avail-txt b { color: #3DDB85; font-weight: 500; }
         .c-footer { margin-top: 2rem; font-family: 'DM Mono', monospace; font-size: .57rem; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.09); }
 
-@media(max-width:760px) {
-  .projects {
-    padding: 5rem 0 1.5rem;
-    justify-content: flex-start;
-    min-height: 100vh;
-    height: auto;
-  }
-  .p-wrap { padding: 0 1.25rem; }
-  .p-hdr { margin-bottom: 1.25rem; }
-  .p-h2 { font-size: 1.6rem; margin-top: .4rem; }
-  .pcard {
-    grid-template-columns: 1fr;
-    height: auto;
-    margin-bottom: .85rem;
-  }
-  .pvis {
-    border-right: none;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-  }
-  .pinfo { padding: 1.1rem 1.15rem; }
-  .ptit { font-size: 1rem; }
-  .pdesc { font-size: .78rem; line-height: 1.65; margin-bottom: .85rem; }
-  .ptags { margin-bottom: .85rem; }
-  .pstrip-wrap { margin-top: .75rem; }
-  .si { flex: 0 0 130px; padding: .75rem .85rem; }
-  .si.on { flex: 0 0 165px; }
-  .pstrip-btn.sleft  { left: -10px; }
-  .pstrip-btn.sright { right: -10px; }
-}
+        /* ── Mobile ── */
+        @media(max-width: 760px) {
+          .contact {
+            padding: 6rem 1.4rem 4rem;
+            align-items: flex-start;
+            margin-top: 1.5rem;
+          }
+          .c-inner {
+            grid-template-columns: 1fr;
+            gap: 2.4rem;
+          }
+          .c-h2 {
+            font-size: clamp(2.2rem, 11vw, 3.2rem);
+            margin: .8rem 0 1rem;
+          }
+          .c-sub {
+            font-size: .88rem;
+          }
+          .c-right {
+            padding-top: 0;
+            gap: .65rem;
+          }
+          .email-card {
+            padding: .95rem 1.1rem;
+          }
+          .etxt {
+            font-size: .72rem;
+          }
+          .socials {
+            flex-wrap: wrap;
+          }
+          .sb {
+            flex: 1;
+            justify-content: center;
+            min-width: 100px;
+          }
+          .c-footer {
+            margin-top: 1.2rem;
+          }
+        }
       `}</style>
 
       <section id="contact" className="contact" ref={ref}>
@@ -88,16 +99,11 @@ export default function Contact() {
             <p className={`c-sub fu d2${v ? " in" : ""}`}>
               Let's make it happen — I'm open to freelance work, collaborations, and full-time opportunities.
             </p>
-            <div className={`c-footer fu d5${v ? " in" : ""}`}>© 2025 Nevin Abraham </div>
+            
           </div>
 
           {/* Right: actions */}
           <div className={`c-right fu d2${v ? " in" : ""}`}>
-            {/* Availability */}
-            <div className="avail-card">
-              <div className="avail-dot" />
-              <div className="avail-txt"><b>Available for work</b> — Open to new projects in 2025</div>
-            </div>
 
             {/* Email */}
             <div style={{ position: "relative" }}>
@@ -118,7 +124,7 @@ export default function Contact() {
 
             {/* Socials */}
             <div>
-              <div className="socials-label">Find me on</div>
+
               <div className="socials">
                 <a href="https://github.com/n3vdev" target="_blank" rel="noreferrer" className="sb">
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -126,17 +132,14 @@ export default function Contact() {
                   </svg>
                   GitHub
                 </a>
-                <a href="mailto:nevinabraham77@gmail.com" className="sb">
-                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
-                    <polyline points="22,6 12,13 2,6" />
-                  </svg>
-                  Email
-                </a>
+
               </div>
+              
             </div>
           </div>
+          <div className={`c-footer fu d5${v ? " in" : ""}`}>© 2026 Nevin Abraham</div>
         </div>
+        
       </section>
     </>
   );

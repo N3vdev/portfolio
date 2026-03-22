@@ -9,6 +9,34 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
 ::-webkit-scrollbar-track { background: #060609; }
 ::-webkit-scrollbar-thumb { background: rgba(123,47,247,.3); border-radius: 99px; }
 
+/* All sections are transparent — blob canvas shines through */
+.about, .projects, .contact, .hero {
+  background: transparent !important;
+}
+
+/* Subtle dark veil per section so text stays legible */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(6,6,9,0.20);
+}
+
+.about::before,
+.projects::before,
+.contact::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(6,6,9,0.80);
+  pointer-events: none;
+  z-index: 0;
+}
+.about > *, .projects > *, .contact > * {
+  position: relative;
+  z-index: 1;
+}
+
 .noise {
   position: absolute; inset: 0; pointer-events: none; z-index: 1;
   opacity: .4; mix-blend-mode: overlay;

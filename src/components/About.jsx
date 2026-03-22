@@ -102,22 +102,6 @@ I am a <b>UI-focused developer</b> specializing in Power BI dashboards and moder
               </p>
             </div>
 
-            {/* Right — services */}
-            <div className={`svc-list fu d3${v ? " in" : ""}`}>
-              {SERVICES.map(s => (
-                <div className="svc" key={s.number}>
-                  <div className="svc-top">
-                    <span className="svnum" style={{ color: s.accent, borderColor: `${s.accent}44` }}>{s.number}</span>
-                    <div className="svtit">{s.title}</div>
-                  </div>
-                  <div className="svdesc">{s.description}</div>
-                  <div className="svchips">
-                    {s.tags.map(t => <span key={t} className="sv-chip">{t}</span>)}
-                  </div>
-                </div>
-              ))}
-            </div>
-
           </div>
         </div>
       </section>

@@ -29,7 +29,6 @@ export default function Projects() {
     return () => window.removeEventListener("keydown", k);
   }, [ai, go]);
 
-  // Check scroll position to show/hide arrows
   const checkScroll = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
@@ -89,7 +88,6 @@ export default function Projects() {
         .p-counter { font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .1em; color: rgba(255,255,255,.18); padding: .4rem .9rem; border-radius: 999px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); display: flex; align-items: center; gap: .4rem; }
         .p-counter b { color: rgba(255,255,255,.55); }
 
-        /* Main card — fixed height */
         .pcard {
           border-radius: 24px; overflow: hidden;
           border: 1px solid rgba(255,255,255,.06);
@@ -98,22 +96,20 @@ export default function Projects() {
           display: grid; grid-template-columns: 1fr 1fr;
           height: 420px;
           margin-bottom: 1.2rem;
-          
         }
 
-        /* Visual half */
         .pvis {
-        position: relative; overflow: hidden;
-        display: flex; align-items: center; justify-content: center;
-        border-right: 1px solid rgba(255,255,255,.05);
-        isolation: isolate;
+          position: relative; overflow: hidden;
+          display: flex; align-items: center; justify-content: center;
+          border-right: 1px solid rgba(255,255,255,.05);
+          isolation: isolate;
         }
         .pvis-bg { position: absolute; inset: 0; transition: background .6s ease; }
         .pvis-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 26px 26px; mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent); }
         .pimg {
           position: relative; z-index: 1;
           width: calc(100% - 3rem); height: calc(100% - 3rem);
-           border-radius: 22px;
+          border-radius: 22px;
           transition: opacity .3s, transform .32s cubic-bezier(.22,1,.36,1);
         }
         .pimg.out { opacity: 0; transform: scale(.96); }
@@ -122,7 +118,6 @@ export default function Projects() {
         .pyear { position: absolute; top: 1.2rem; right: 1.2rem; z-index: 10; font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .08em; color: rgba(255,255,255,.22); background: rgba(0,0,0,.4); border: 1px solid rgba(255,255,255,.07); padding: .26rem .68rem; border-radius: 999px; backdrop-filter: blur(10px); }
         .p-bgnum { position: absolute; bottom: .5rem; right: 1rem; font-family: 'Syne', sans-serif; font-size: 7rem; font-weight: 800; color: rgba(255,255,255,.022); line-height: 1; user-select: none; pointer-events: none; }
 
-        /* Info half */
         .pinfo { display: flex; flex-direction: column; justify-content: space-between; padding: 2rem 2.4rem; overflow: hidden; }
         .ptit-row { display: flex; align-items: flex-start; gap: .65rem; flex-wrap: wrap; margin-bottom: .85rem; }
         .ptit { font-family: 'Syne', sans-serif; font-size: clamp(1.2rem,2.2vw,1.7rem); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -.03em; transition: opacity .25s; margin: 0; }
@@ -132,10 +127,26 @@ export default function Projects() {
         .pdesc.out { opacity: 0; }
         .ptags { display: flex; flex-wrap: wrap; gap: .32rem; margin-bottom: 1.5rem; }
 
-        /* Nav */
+        /* ── Nav arrows — highlighted ── */
         .pnav { display: flex; align-items: center; gap: .6rem; }
-        .narr { width: 36px; height: 36px; border-radius: 50%; border: 1px solid rgba(255,255,255,.08); background: transparent; color: rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all .22s; font-size: .82rem; flex-shrink: 0; }
-        .narr:hover { border-color: #7B2FF7; color: #fff; background: rgba(123,47,247,.1); }
+        .narr {
+          width: 38px; height: 38px; border-radius: 50%;
+          border: 1px solid rgba(123,47,247,.35);
+          background: rgba(123,47,247,.1);
+          color: rgba(168,100,255,.9);
+          display: flex; align-items: center; justify-content: center;
+          cursor: pointer; transition: all .22s; font-size: .88rem; flex-shrink: 0;
+          box-shadow: 0 0 10px rgba(123,47,247,.15);
+        }
+        .narr:hover {
+          border-color: #7B2FF7;
+          color: #fff;
+          background: rgba(123,47,247,.28);
+          box-shadow: 0 0 18px rgba(123,47,247,.45);
+          transform: scale(1.08);
+        }
+        .narr:active { transform: scale(.95); }
+
         .pdots { display: flex; gap: .32rem; flex: 1; align-items: center; }
         .pdot { height: 2px; border-radius: 999px; background: rgba(255,255,255,.1); cursor: pointer; transition: all .32s cubic-bezier(.22,1,.36,1); flex: 1; }
         .pdot.on { flex: 2.5; background: #7B2FF7; }
@@ -167,17 +178,13 @@ export default function Projects() {
         .pstrip::-webkit-scrollbar { display: none; }
         .pstrip { -ms-overflow-style: none; scrollbar-width: none; }
 
-.si {
-  flex: 0 0 160px; padding: .95rem 1.05rem; border-radius: 14px;
-  border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.02);
-  cursor: pointer; transition: all .4s cubic-bezier(.22,1,.36,1); user-select: none;
-}
-
+        .si {
+          flex: 0 0 160px; padding: .95rem 1.05rem; border-radius: 14px;
+          border: 1px solid rgba(255,255,255,.06); background: rgba(255,255,255,.02);
+          cursor: pointer; transition: all .4s cubic-bezier(.22,1,.36,1); user-select: none;
+        }
         .si:hover { background: rgba(255,255,255,.04); border-color: rgba(255,255,255,.1); }
-        .si.on {
-  flex: 0 0 220px;
-  background: rgba(123,47,247,.08); border-color: rgba(123,47,247,.22);
-}
+        .si.on { flex: 0 0 220px; background: rgba(123,47,247,.08); border-color: rgba(123,47,247,.22); }
         .si-bar { width: 18px; height: 2px; border-radius: 999px; margin-bottom: .5rem; transition: width .28s cubic-bezier(.22,1,.36,1); }
         .si.on .si-bar { width: 32px; }
         .si-num { font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .1em; margin-bottom: .38rem; color: rgba(255,255,255,.2); transition: color .22s; }
@@ -187,9 +194,10 @@ export default function Projects() {
         .si-cat { font-family: 'DM Mono', monospace; font-size: .58rem; color: rgba(255,255,255,.16); margin-top: .25rem; letter-spacing: .06em; text-transform: uppercase; }
 
         @media(max-width:760px) {
-          .projects { padding: 6rem 0 3rem; justify-content: flex-start; }
+          .projects { padding: 6rem 0 3rem; justify-content: flex-start; margin-top: 1.5rem; }
           .pcard { grid-template-columns: 1fr; height: auto; }
           .pvis { height: 220px; border-right: none; border-bottom: 1px solid rgba(255,255,255,.05); }
+          .pstrip-wrap { display: none; }
         }
       `}</style>
 
@@ -197,7 +205,6 @@ export default function Projects() {
         <div className="noise" />
         <div className="p-wrap">
 
-          {/* Header */}
           <div className={`p-hdr fu${v ? " in" : ""}`}>
             <div>
               <span className="eyebrow">Selected Work</span>
@@ -210,7 +217,6 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Main card */}
           <div
             className={`pcard fu d2${v ? " in" : ""}`}
             style={{ borderColor: cs.border }}
@@ -222,38 +228,34 @@ export default function Projects() {
               ts.current = null;
             }}
           >
-            {/* Visual half */}
-{/* Visual half */}
-<div className="pvis">
-  {p.image
-    ? <div style={{
-        width: "calc(100% - 3rem)",
-        height: "calc(100% - 3rem)",
-        borderRadius: "12px",
-        overflow: "hidden",
-        flexShrink: 0,
-        position: "relative",
-        zIndex: 1
-      }}>
-        <img
-          src={p.image}
-          alt={p.title}
-          className={`pimg${slide ? " out" : ""}`}
-          style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-        />
-      </div>
-    : <>
-        <div className="pvis-bg" style={{ background: `radial-gradient(ellipse at 50% 50%, ${p.color}14 0%, transparent 65%)` }} />
-        <div className="pvis-dots" />
-        <div className={`pico${slide ? " out" : ""}`} style={{ background: `${p.color}10`, borderColor: `${p.color}25` }}>
-          <ProjectIcon category={p.category} color={p.color} />
-        </div>
-      </>
-  }
+            <div className="pvis">
+              {p.image
+                ? <div style={{
+                    width: "calc(100% - 3rem)",
+                    height: "calc(100% - 3rem)",
+                    borderRadius: "12px",
+                    overflow: "hidden",
+                    flexShrink: 0,
+                    position: "relative",
+                    zIndex: 1
+                  }}>
+                    <img
+                      src={p.image}
+                      alt={p.title}
+                      className={`pimg${slide ? " out" : ""}`}
+                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                    />
+                  </div>
+                : <>
+                    <div className="pvis-bg" style={{ background: `radial-gradient(ellipse at 50% 50%, ${p.color}14 0%, transparent 65%)` }} />
+                    <div className="pvis-dots" />
+                    <div className={`pico${slide ? " out" : ""}`} style={{ background: `${p.color}10`, borderColor: `${p.color}25` }}>
+                      <ProjectIcon category={p.category} color={p.color} />
+                    </div>
+                  </>
+              }
+            </div>
 
-</div>
-
-            {/* Info half */}
             <div className="pinfo">
               <div>
                 <div className="ptit-row">
@@ -275,7 +277,7 @@ export default function Projects() {
                     <div key={i} className={`pdot${i === ai ? " on" : ""}`} onClick={() => go(i)} />
                   ))}
                 </div>
-                {p.link !== "#"
+                {p.link && p.link !== "#"
                   ? <a href={p.link} target="_blank" rel="noreferrer" className="bvisit">Visit ↗</a>
                   : <span className="bdis">Soon</span>
                 }
@@ -283,7 +285,6 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* Thumbnail strip */}
           <div className={`pstrip-wrap fu d3${v ? " in" : ""}`}>
             <button
               className={`pstrip-btn sleft${canScrollLeft ? "" : " hidden"}`}

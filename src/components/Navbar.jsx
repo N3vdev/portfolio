@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
 
-export default function Navbar({ active }) {
+export default function Navbar({ active, onNav }) {
   const [sc, setSc] = useState(false);
   const [open, setOpen] = useState(false);
 
+  // Since we're in snap-scroll (no real scroll), just keep sc=false
+  // but keep the handler in case someone uses non-snap mode
   useEffect(() => {
     const h = () => setSc(window.scrollY > 50);
     window.addEventListener("scroll", h);
@@ -11,7 +13,7 @@ export default function Navbar({ active }) {
   }, []);
 
   const go = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    if (onNav) onNav(id);
     setOpen(false);
   };
 
@@ -73,11 +75,11 @@ export default function Navbar({ active }) {
             Nev.
           </div>
           <div className="nlinks">
-            {["home", "about", "projects"].map(s => (
+            {["home","about","projects"].map(s => (
               <div
                 key={s}
-                className={`nitem${active === s ? " on" : ""}`}
-                onClick={() => go(s)}
+                className={`nitem${active === (s === "home" ? "hero" : s) ? " on" : ""}`}
+                onClick={() => go(s === "home" ? "hero" : s)}
               >
                 {s[0].toUpperCase() + s.slice(1)}
               </div>
@@ -86,7 +88,7 @@ export default function Navbar({ active }) {
           <button className="ncta" onClick={() => go("contact")}>Contact Me</button>
           <button className="nburg" onClick={() => setOpen(o => !o)}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
-              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="6"  x2="21" y2="6"  />
               <line x1="3" y1="12" x2="21" y2="12" />
               <line x1="3" y1="18" x2="21" y2="18" />
             </svg>
@@ -96,11 +98,11 @@ export default function Navbar({ active }) {
 
       {open && (
         <div className="mdrawer" onClick={() => setOpen(false)}>
-          {["home", "about", "projects", "contact"].map(s => (
+          {["home","about","projects","contact"].map(s => (
             <div
               key={s}
               className="nitem"
-              onClick={e => { e.stopPropagation(); go(s); }}
+              onClick={e => { e.stopPropagation(); go(s === "home" ? "hero" : s); }}
             >
               {s[0].toUpperCase() + s.slice(1)}
             </div>
