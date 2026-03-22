@@ -19,7 +19,7 @@ export default function Contact() {
         .c-grid { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); }
         .c-orb { position: absolute; width: 600px; height: 400px; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse, rgba(123,47,247,.05) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
         .c-inner { position: relative; z-index: 2; max-width: 1320px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
-        .c-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem,6vw,4.4rem); font-weight: 800; color: #fff; line-height: .9; letter-spacing: -.04em; margin: 1.1rem 0 1.5rem; text-shadow: 0 2px 12px rgba(0,0,0,.5); }
+        .c-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem,6vw,4.4rem); font-weight: 700; color: #fff; line-height: .9; letter-spacing: -.04em; margin: 1.1rem 0 1.5rem; text-shadow: 0 2px 12px rgba(0,0,0,.5); }
         .c-sub { font-family: 'DM Sans', sans-serif; font-size: .93rem; line-height: 1.82; color: rgba(255,255,255,.55); font-weight: 300; }
         .c-right { display: flex; flex-direction: column; gap: .75rem; padding-top: .5rem; }
 

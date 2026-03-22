@@ -111,7 +111,7 @@ export default function Hero({ loaded = false }) {
         @media(max-width:800px) {
           .hc { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; text-align: center; }
           .h-scroll { display: none; }
-          .h-name { font-size: clamp(2.6rem, 11vw, 4.5rem); line-height: .92; margin-bottom: 2rem; }
+          .h-name { font-size: clamp(3rem, 10vw, 5rem); line-height: .92; margin-bottom: 2rem; }
           .h-status { margin-bottom: 1.5rem; justify-content: center; }
           .h-role { margin-bottom: 1.5rem; justify-content: center; }
           .h-cta { justify-content: center; }

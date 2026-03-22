@@ -29,12 +29,6 @@ export default function Projects() {
     return () => window.removeEventListener("keydown", k);
   }, [ai, go]);
 
-  // Auto-advance every 3s — resets on any manual interaction
-  useEffect(() => {
-    const t = setInterval(() => go(ai + 1), 3000);
-    return () => clearInterval(t);
-  }, [ai, go]);
-
   const checkScroll = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
@@ -91,7 +85,7 @@ export default function Projects() {
         .p-wrap { max-width: 1320px; margin: 0 auto; padding: 0 2.5rem; width: 100%; }
 
         .p-hdr { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 1.8rem; gap: 1rem; flex-wrap: wrap; }
-        .p-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2rem,4vw,3rem); font-weight: 800; color: #fff; letter-spacing: -.035em; line-height: 1; margin-top: .75rem; }
+        .p-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 700; color: #fff; letter-spacing: -.035em; line-height: 1; margin-top: .75rem; }
         .p-counter { font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .1em; color: rgba(255,255,255,.4); padding: .4rem .9rem; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); display: flex; align-items: center; gap: .4rem; backdrop-filter: blur(10px); }
         .p-counter b { color: rgba(255,255,255,.85); }
 
@@ -129,19 +123,19 @@ export default function Projects() {
         .pvis-dots { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 26px 26px; mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 75% 75% at 50% 50%, black, transparent); }
         .pimg {
           position: relative; z-index: 1;
-          width: calc(100% - 3rem); height: calc(100% - 3rem);
-          border-radius: 16px;
-          transition: opacity .3s, transform .32s cubic-bezier(.22,1,.36,1);
+          width: calc(100% - 1rem); height: calc(100% - 1rem);
+          border-radius: 14px;
+          transition: opacity .6s cubic-bezier(.22,1,.36,1), transform .6s cubic-bezier(.22,1,.36,1), filter .6s cubic-bezier(.22,1,.36,1);
           box-shadow: 0 4px 24px rgba(0,0,0,.4);
         }
-        .pimg.out { opacity: 0; transform: scale(.96); }
+        .pimg.out { opacity: 0; transform: scale(.97); filter: blur(6px); }
         .pico { position: relative; z-index: 1; width: 88px; height: 88px; border-radius: 24px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255,255,255,.1); background: rgba(255,255,255,.04); backdrop-filter: blur(8px); transition: opacity .25s, transform .28s cubic-bezier(.22,1,.36,1); }
         .pico.out { opacity: 0; transform: scale(.85); }
 
         /* ── Info half ── */
         .pinfo { display: flex; flex-direction: column; justify-content: space-between; padding: 1.8rem 2.2rem; overflow: hidden; }
         .ptit-row { display: flex; align-items: flex-start; gap: .65rem; flex-wrap: wrap; margin-bottom: .75rem; }
-        .ptit { font-family: 'Syne', sans-serif; font-size: clamp(1.2rem,2.2vw,1.6rem); font-weight: 800; color: #fff; line-height: 1.1; letter-spacing: -.03em; transition: opacity .25s; margin: 0; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+        .ptit { font-family: 'Syne', sans-serif; font-size: clamp(1.2rem,2.2vw,1.6rem); font-weight: 700; color: #fff; line-height: 1.1; letter-spacing: -.03em; transition: opacity .25s; margin: 0; text-shadow: 0 1px 8px rgba(0,0,0,.4); }
         .ptit.out { opacity: 0; }
         .pcat-pill { font-family: 'DM Mono', monospace; font-size: .54rem; letter-spacing: .1em; text-transform: uppercase; padding: .28rem .78rem; border-radius: 999px; white-space: nowrap; margin-top: .28rem; flex-shrink: 0; backdrop-filter: blur(8px); }
         .pdesc { font-family: 'DM Sans', sans-serif; font-size: .84rem; line-height: 1.82; color: rgba(255,255,255,.55); margin-bottom: 1rem; font-weight: 300; transition: opacity .25s .04s; }
@@ -218,7 +212,6 @@ export default function Projects() {
             padding: 5.5rem 0 1.5rem;
             justify-content: flex-start;
             overflow: hidden;
-
           }
           .p-wrap {
             padding: 0 1.2rem;
@@ -238,7 +231,7 @@ export default function Projects() {
             flex-shrink: 0;
           }
           .pvis {
-            height: 100%;
+            height: 220px;
             border-right: none;
             border-bottom: 1px solid rgba(255,255,255,.07);
             flex-shrink: 0;
@@ -296,8 +289,8 @@ export default function Projects() {
             <div className="pvis">
               {p.image
                 ? <div style={{
-                    width: "calc(100% - 2.5rem)",
-                    height: "calc(100% - 2.5rem)",
+                    width: "calc(100% - 1rem)",
+                    height: "calc(100% - 1rem)",
                     borderRadius: "12px",
                     overflow: "hidden",
                     flexShrink: 0,
