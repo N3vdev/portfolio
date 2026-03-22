@@ -1,10 +1,42 @@
-import { useRef } from "react";
-import { useInView } from "../hooks";
+import { useRef, useState, useEffect } from "react";
 import { SERVICES } from "../data";
+
+// Custom hook: tracks visibility + scroll direction so cards can exit
+// in the opposite direction they entered from
+function useScrollAware(ref, threshold = 0.08) {
+  const [state, setState] = useState({ visible: false, fromAbove: false });
+  const lastScrollY = useRef(window.scrollY);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        const scrollingDown = window.scrollY >= lastScrollY.current;
+        lastScrollY.current = window.scrollY;
+        setState({ visible: entry.isIntersecting, fromAbove: !scrollingDown });
+      },
+      { threshold }
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, threshold]);
+
+  return state;
+}
 
 export default function About() {
   const ref = useRef(null);
-  const v = useInView(ref, .08);
+  const { visible, fromAbove } = useScrollAware(ref, 0.08);
+
+  // When not visible:
+  //   - scrolled past (fromAbove = false → user went down, section exits upward)
+  //     bio card exits LEFT, pull card exits RIGHT
+  //   - scrolled back up (fromAbove = true → user went up, section exits downward)
+  //     bio card exits LEFT, pull card exits RIGHT (same — they always split outward)
+  // On re-entry the directions just reverse naturally.
 
   return (
     <>
@@ -25,9 +57,16 @@ export default function About() {
           line-height: 1.06; letter-spacing: -.035em; color: #fff; margin: 1rem 0 0;
         }
 
+        .a-grid-clip {
+
+          padding: 4px;
+          margin: -4px;
+        }
         .a-grid {
-          display: grid; grid-template-columns: 1fr 1fr;
-          gap: 1.2rem; align-items: start;
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1.2rem;
+          align-items: stretch;
         }
 
         /* ── Bio card ── */
@@ -40,17 +79,37 @@ export default function About() {
           padding: clamp(1.4rem, 3vh, 2.2rem) clamp(1.4rem, 2vw, 2.2rem);
           box-shadow: 0 8px 40px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
           position: relative; overflow: hidden;
-
-          /* enter animation */
-          opacity: 0;
-          transform: translateY(28px);
-          transition: opacity .7s cubic-bezier(.22,1,.36,1) .15s,
-                      transform .7s cubic-bezier(.22,1,.36,1) .15s;
+          display: flex; flex-direction: column;
+          will-change: opacity, transform;
+          transition:
+            opacity  .75s cubic-bezier(.22,1,.36,1),
+            transform .75s cubic-bezier(.22,1,.36,1);
         }
-        .a-bio-card.in { opacity: 1; transform: translateY(0); }
         .a-bio-card::after {
           content: ''; position: absolute; inset: 0; pointer-events: none;
           opacity: .2; mix-blend-mode: overlay; border-radius: 24px;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+        }
+
+        /* ── Pull quote card ── */
+        .a-pull-card {
+          background: rgba(123,47,247,0.07);
+          backdrop-filter: blur(24px) saturate(160%);
+          -webkit-backdrop-filter: blur(24px) saturate(160%);
+          border: 1px solid rgba(123,47,247,.18);
+          border-radius: 24px;
+          padding: clamp(1.4rem, 3vh, 2.2rem) clamp(1.4rem, 2vw, 2.2rem);
+          box-shadow: 0 8px 40px rgba(0,0,0,.4), 0 0 30px rgba(123,47,247,.06), inset 0 1px 0 rgba(123,47,247,.1);
+          position: relative; overflow: hidden;
+          display: flex; flex-direction: column; justify-content: center; gap: 1.5rem;
+          will-change: opacity, transform;
+          transition:
+            opacity  .75s cubic-bezier(.22,1,.36,1) .2s,
+            transform .75s cubic-bezier(.22,1,.36,1) .2s;
+        }
+        .a-pull-card::after {
+          content: ''; position: absolute; inset: 0; pointer-events: none;
+          opacity: .15; mix-blend-mode: overlay; border-radius: 24px;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
         }
 
@@ -68,31 +127,6 @@ export default function About() {
           color: rgba(255,255,255,.55); font-weight: 300; margin: 0;
         }
         .a-bio b { color: rgba(255,255,255,.88); font-weight: 500; }
-
-        /* ── Pull quote card ── */
-        .a-pull-card {
-          background: rgba(123,47,247,0.07);
-          backdrop-filter: blur(24px) saturate(160%);
-          -webkit-backdrop-filter: blur(24px) saturate(160%);
-          border: 1px solid rgba(123,47,247,.18);
-          border-radius: 24px;
-          padding: clamp(1.4rem, 3vh, 2.2rem) clamp(1.4rem, 2vw, 2.2rem);
-          box-shadow: 0 8px 40px rgba(0,0,0,.4), 0 0 30px rgba(123,47,247,.06), inset 0 1px 0 rgba(123,47,247,.1);
-          position: relative; overflow: hidden;
-          display: flex; flex-direction: column; justify-content: space-between; gap: 1.5rem;
-
-          /* enter animation — slightly delayed */
-          opacity: 0;
-          transform: translateY(28px);
-          transition: opacity .7s cubic-bezier(.22,1,.36,1) .3s,
-                      transform .7s cubic-bezier(.22,1,.36,1) .3s;
-        }
-        .a-pull-card.in { opacity: 1; transform: translateY(0); }
-        .a-pull-card::after {
-          content: ''; position: absolute; inset: 0; pointer-events: none;
-          opacity: .15; mix-blend-mode: overlay; border-radius: 24px;
-          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
-        }
 
         .a-quote-mark {
           font-family: 'Syne', sans-serif;
@@ -130,6 +164,22 @@ export default function About() {
         .svchips { display: flex; flex-wrap: wrap; gap: .28rem; }
         .sv-chip { font-family: 'DM Mono', monospace; font-size: .52rem; letter-spacing: .06em; text-transform: uppercase; padding: .18rem .52rem; border-radius: 999px; border: 1px solid rgba(255,255,255,.1); color: rgba(255,255,255,.38); background: rgba(255,255,255,.03); }
 
+        /* ═══════════════════════════════════════
+           DESKTOP — larger type
+        ═══════════════════════════════════════ */
+        @media(min-width: 861px) {
+          .a-h2 { font-size: clamp(2.8rem, 5vw, 4.6rem); }
+          .a-bio { font-size: clamp(1rem, 1.8vh, 1.18rem); line-height: 1.92; }
+          .a-bio-label { font-size: .65rem; }
+          .a-pull { font-size: clamp(1.05rem, 2vh, 1.32rem); line-height: 1.75; }
+          .a-quote-mark { font-size: 5.5rem; }
+          .a-pull-attr { font-size: .65rem; }
+          .svtit { font-size: 1.08rem; }
+          .svdesc { font-size: .9rem; }
+          .svnum { font-size: .64rem; }
+          .sv-chip { font-size: .58rem; }
+        }
+
         /* ── Mobile ── */
         @media(max-width:860px) {
           .about { align-items: flex-start; padding-top: 5.5rem; overflow-y: auto; }
@@ -137,6 +187,7 @@ export default function About() {
           .a-header { margin-bottom: 1.2rem; }
           .a-h2 { font-size: clamp(1.6rem, 6vw, 2.2rem); }
           .a-grid { grid-template-columns: 1fr; gap: 1rem; }
+          .a-grid-clip { overflow: visible; padding: 0; margin: 0; }
           .svc-list { display: none; }
         }
       `}</style>
@@ -146,29 +197,52 @@ export default function About() {
         <div className="a-wrap">
 
           <div className="a-header">
-            <div className={`fu${v ? " in" : ""}`}><span className="eyebrow">About Me</span></div>
-            <h2 className={`a-h2 fu d1${v ? " in" : ""}`}>Creative developer</h2>
+            <div className={`fu${visible ? " in" : ""}`}><span className="eyebrow">About Me</span></div>
+            <h2 className={`a-h2 fu d1${visible ? " in" : ""}`}>Creative developer</h2>
           </div>
 
-          <div className="a-grid">
+          <div className="a-grid-clip">
+            <div className="a-grid">
 
-            {/* Bio card */}
-            <div className={`a-bio-card${v ? " in" : ""}`}>
-              <div className="a-bio-label">Bio</div>
-              <p className="a-bio">
-                I am a <b>UI-focused developer</b> specializing in Power BI dashboards and modern web interfaces. I transform <b>complex data</b> into clear, actionable insights through intuitive visualization, designing in <b>Figma</b> and building pixel-perfect, responsive experiences.
-              </p>
+              {/* Bio card — LEFT on enter, LEFT on exit (slides away left when leaving) */}
+              <div
+                className="a-bio-card"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible
+                    ? "translateX(0)"
+                    : fromAbove
+                      ? "translateX(-72px)"   // coming from above: enter from left
+                      : "translateX(-72px)",  // going below: exit to left
+                }}
+              >
+                <div className="a-bio-label">Bio</div>
+                <p className="a-bio">
+                  I am a <b>UI-focused developer</b> specializing in Power BI dashboards and modern web interfaces. I transform <b>complex data</b> into clear, actionable insights through intuitive visualization, designing in <b>Figma</b> and building pixel-perfect, responsive experiences.
+                </p>
+              </div>
+
+              {/* Pull quote — RIGHT on enter, RIGHT on exit */}
+              <div
+                className="a-pull-card"
+                style={{
+                  opacity: visible ? 1 : 0,
+                  transform: visible
+                    ? "translateX(0)"
+                    : fromAbove
+                      ? "translateX(72px)"
+                      : "translateX(72px)",
+                }}
+              >
+                <div className="a-quote-mark">"</div>
+                <p className="a-pull">
+                  I don't just build — I think about the person who'll use it, and what will make their experience feel effortless and clear.
+                </p>
+              </div>
+
             </div>
-
-            {/* Pull quote card */}
-            <div className={`a-pull-card${v ? " in" : ""}`}>
-              <div className="a-quote-mark">"</div>
-              <p className="a-pull">
-                I don't just build — I think about the person who'll use it, and what will make their experience feel effortless and clear.
-              </p>
-            </div>
-
           </div>
+
         </div>
       </section>
     </>

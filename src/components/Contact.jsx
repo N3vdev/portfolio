@@ -94,10 +94,6 @@ export default function Contact() {
           </div>
 
           <div className={`c-right fu d2${v ? " in" : ""}`}>
-            <div className="avail-card">
-              <div className="avail-dot" />
-              <div className="avail-txt"><b>Available for work</b></div>
-            </div>
 
             <div style={{ position: "relative" }}>
               <div className="email-card" onClick={copy}>

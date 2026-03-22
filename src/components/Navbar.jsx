@@ -35,7 +35,7 @@ export default function Navbar({ active, onNav }) {
           box-shadow: 0 4px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
         }
         .nlogo {
-          font-family: 'Syne', sans-serif; font-weight: 800; font-size: .92rem; color: #fff;
+          font-family: 'Syne', sans-serif; font-weight: 700; font-size: .92rem; color: #fff;
           cursor: pointer; letter-spacing: -.02em; display: flex; align-items: center; gap: .42rem;
         }
         .nlogo-dot {

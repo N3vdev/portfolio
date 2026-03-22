@@ -3,6 +3,10 @@ import { useInView } from "../hooks";
 import { PROJECTS, getCatStyle } from "../data";
 import ProjectIcon from "./ProjectIcon";
 
+// ── CONFIG ───────────────────────────────────────────
+const AUTO_INTERVAL = 4000; // ms between auto-advances
+// ────────────────────────────────────────────────────
+
 export default function Projects() {
   const ref = useRef(null);
   const v = useInView(ref, .04);
@@ -12,14 +16,44 @@ export default function Projects() {
   const [canScrollRight, setCanScrollRight] = useState(false);
   const ts = useRef(null);
   const stripRef = useRef(null);
+  const timerRef = useRef(null); // holds the auto-advance interval
 
-  const go = useCallback(next => {
+  const go = useCallback((next, isAuto = false) => {
     if (slide) return;
     const n = ((next % PROJECTS.length) + PROJECTS.length) % PROJECTS.length;
     setSlide(true);
     setTimeout(() => { setAi(n); setSlide(false); }, 280);
+
+    // If user manually navigated, reset the timer so it doesn't
+    // immediately fire again right after their click
+    if (!isAuto) {
+      clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setAi(prev => {
+          const next = (prev + 1) % PROJECTS.length;
+          setSlide(true);
+          setTimeout(() => setSlide(false), 280);
+          return next;
+        });
+      }, AUTO_INTERVAL);
+    }
   }, [slide]);
 
+  // ── Auto-advance on mount ──────────────────────────
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setAi(prev => {
+        const next = (prev + 1) % PROJECTS.length;
+        setSlide(true);
+        setTimeout(() => setSlide(false), 280);
+        return next;
+      });
+    }, AUTO_INTERVAL);
+
+    return () => clearInterval(timerRef.current);
+  }, []); // runs once — timer restarts itself via go() on manual nav
+
+  // ── Keyboard nav ──────────────────────────────────
   useEffect(() => {
     const k = e => {
       if (e.key === "ArrowRight") go(ai + 1);
@@ -29,6 +63,7 @@ export default function Projects() {
     return () => window.removeEventListener("keydown", k);
   }, [ai, go]);
 
+  // ── Thumbnail strip scroll indicators ─────────────
   const checkScroll = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
@@ -89,7 +124,7 @@ export default function Projects() {
         .p-counter { font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .1em; color: rgba(255,255,255,.4); padding: .4rem .9rem; border-radius: 999px; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.1); display: flex; align-items: center; gap: .4rem; backdrop-filter: blur(10px); }
         .p-counter b { color: rgba(255,255,255,.85); }
 
-        /* ── Main card — blur + noise backdrop ── */
+        /* ── Main card ── */
         .pcard {
           border-radius: 24px; overflow: hidden;
           border: 1px solid rgba(255,255,255,.10);
@@ -103,12 +138,27 @@ export default function Projects() {
           margin-bottom: 1rem;
           position: relative;
         }
-        /* noise overlay on card */
         .pcard::after {
           content: '';
           position: absolute; inset: 0; pointer-events: none; z-index: 10;
           opacity: .25; mix-blend-mode: overlay; border-radius: 24px;
           background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='.08'/%3E%3C/svg%3E");
+        }
+
+        /* ── Progress bar showing time until next slide ── */
+        .pcard-progress {
+          position: absolute; bottom: 0; left: 0; right: 0; height: 2px;
+          background: rgba(255,255,255,.06); z-index: 11; border-radius: 0 0 24px 24px; overflow: hidden;
+        }
+        .pcard-progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, #7B2FF7, #b06aff);
+          border-radius: 999px;
+          animation: progress-tick ${AUTO_INTERVAL}ms linear infinite;
+        }
+        @keyframes progress-tick {
+          from { width: 0%; }
+          to   { width: 100%; }
         }
 
         /* ── Visual half ── */
@@ -141,7 +191,6 @@ export default function Projects() {
         .pdesc { font-family: 'DM Sans', sans-serif; font-size: .84rem; line-height: 1.82; color: rgba(255,255,255,.55); margin-bottom: 1rem; font-weight: 300; transition: opacity .25s .04s; }
         .pdesc.out { opacity: 0; }
         .ptags { display: flex; flex-wrap: wrap; gap: .32rem; margin-bottom: 1.2rem; }
-        /* brighter chips inside card */
         .pinfo .chip { border-color: rgba(255,255,255,.14); color: rgba(255,255,255,.45); background: rgba(255,255,255,.04); }
 
         /* ── Nav arrows ── */
@@ -156,12 +205,7 @@ export default function Projects() {
           box-shadow: 0 0 12px rgba(123,47,247,.2);
           backdrop-filter: blur(8px);
         }
-        .narr:hover {
-          border-color: #7B2FF7; color: #fff;
-          background: rgba(123,47,247,.35);
-          box-shadow: 0 0 20px rgba(123,47,247,.5);
-          transform: scale(1.08);
-        }
+        .narr:hover { border-color: #7B2FF7; color: #fff; background: rgba(123,47,247,.35); box-shadow: 0 0 20px rgba(123,47,247,.5); transform: scale(1.08); }
         .narr:active { transform: scale(.95); }
         .pdots { display: flex; gap: .32rem; flex: 1; align-items: center; }
         .pdot { height: 2px; border-radius: 999px; background: rgba(255,255,255,.15); cursor: pointer; transition: all .32s cubic-bezier(.22,1,.36,1); flex: 1; }
@@ -206,52 +250,15 @@ export default function Projects() {
 
         /* ── Mobile ── */
         @media(max-width: 760px) {
-          .projects {
-            height: 100vh;
-            min-height: unset;
-            padding: 5.5rem 0 1.5rem;
-            justify-content: flex-start;
-            overflow: hidden;
-          }
-          .p-wrap {
-            padding: 0 1.2rem;
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            margin-bottom: 5rem;
-          }
+          .projects { height: 100vh; min-height: unset; padding: 5.5rem 0 1.5rem; justify-content: flex-start; overflow: hidden; }
+          .p-wrap { padding: 0 1.2rem; display: flex; flex-direction: column; height: 100%; margin-bottom: 5rem; }
           .p-hdr { margin-bottom: 1rem; flex-shrink: 0; }
           .p-h2 { font-size: 1.5rem; margin-top: .3rem; }
-          .pcard {
-            grid-template-columns: 1fr;
-            height: auto;
-            flex: 1;
-            min-height: 0;
-            margin-bottom: .7rem;
-            flex-shrink: 0;
-          }
-          .pvis {
-            height: 220px;
-            border-right: none;
-            border-bottom: 1px solid rgba(255,255,255,.07);
-            flex-shrink: 0;
-          }
-          .pinfo {
-            padding: 1rem 1.1rem;
-            flex: 1;
-            min-height: 0;
-          }
+          .pcard { grid-template-columns: 1fr; height: auto; flex: 1; min-height: 0; margin-bottom: .7rem; flex-shrink: 0; }
+          .pvis { height: 220px; border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); flex-shrink: 0; }
+          .pinfo { padding: 1rem 1.1rem; flex: 1; min-height: 0; }
           .ptit { font-size: .95rem; }
-          .pdesc {
-            font-size: .76rem;
-            line-height: 1.6;
-            margin-bottom: .65rem;
-            /* clamp to 3 lines on mobile */
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-          }
+          .pdesc { font-size: .76rem; line-height: 1.6; margin-bottom: .65rem; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
           .ptags { margin-bottom: .65rem; }
           .pstrip-wrap { display: none; }
           .narr { width: 32px; height: 32px; font-size: .78rem; }
@@ -286,23 +293,15 @@ export default function Projects() {
               ts.current = null;
             }}
           >
+            {/* Progress bar — restarts via key prop when slide changes */}
+            <div className="pcard-progress">
+              <div className="pcard-progress-fill" key={ai} />
+            </div>
+
             <div className="pvis">
               {p.image
-                ? <div style={{
-                    width: "calc(100% - 1rem)",
-                    height: "calc(100% - 1rem)",
-                    borderRadius: "12px",
-                    overflow: "hidden",
-                    flexShrink: 0,
-                    position: "relative",
-                    zIndex: 1,
-                  }}>
-                    <img
-                      src={p.image}
-                      alt={p.title}
-                      className={`pimg${slide ? " out" : ""}`}
-                      style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
+                ? <div style={{ width: "calc(100% - 1rem)", height: "calc(100% - 1rem)", borderRadius: "12px", overflow: "hidden", flexShrink: 0, position: "relative", zIndex: 1 }}>
+                    <img src={p.image} alt={p.title} className={`pimg${slide ? " out" : ""}`} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
                   </div>
                 : <>
                     <div className="pvis-bg" style={{ background: `radial-gradient(ellipse at 50% 50%, ${p.color}18 0%, transparent 65%)` }} />
@@ -318,9 +317,7 @@ export default function Projects() {
               <div>
                 <div className="ptit-row">
                   <div className={`ptit${slide ? " out" : ""}`}>{p.title}</div>
-                  <div className="pcat-pill" style={{ background: cs.bg, border: `1px solid ${cs.border}`, color: cs.text }}>
-                    {p.category}
-                  </div>
+                  <div className="pcat-pill" style={{ background: cs.bg, border: `1px solid ${cs.border}`, color: cs.text }}>{p.category}</div>
                 </div>
                 <div className={`pdesc${slide ? " out" : ""}`}>{p.description}</div>
                 <div className="ptags">
@@ -346,14 +343,7 @@ export default function Projects() {
           <div className={`pstrip-wrap fu d3${v ? " in" : ""}`}>
             <button className={`pstrip-btn sleft${canScrollLeft ? "" : " hidden"}`} onClick={() => stripScroll(-1)}>←</button>
             <button className={`pstrip-btn sright${canScrollRight ? "" : " hidden"}`} onClick={() => stripScroll(1)}>→</button>
-            <div
-              className="pstrip"
-              ref={stripRef}
-              onMouseDown={onMouseDown}
-              onMouseMove={onMouseMove}
-              onMouseUp={onMouseUp}
-              onMouseLeave={onMouseUp}
-            >
+            <div className="pstrip" ref={stripRef} onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
               {PROJECTS.map((pr, i) => {
                 const cs2 = getCatStyle(pr.category);
                 return (
