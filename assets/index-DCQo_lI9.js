@@ -488,12 +488,14 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
             padding: 5.5rem 0 1.5rem;
             justify-content: flex-start;
             overflow: hidden;
+
           }
           .p-wrap {
             padding: 0 1.2rem;
             display: flex;
             flex-direction: column;
             height: 100%;
+                        margin-bottom: 2rem;
           }
           .p-hdr { margin-bottom: 1rem; flex-shrink: 0; }
           .p-h2 { font-size: 1.5rem; margin-top: .3rem; }
