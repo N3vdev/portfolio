@@ -29,6 +29,12 @@ export default function Projects() {
     return () => window.removeEventListener("keydown", k);
   }, [ai, go]);
 
+  // Auto-advance every 3s — resets on any manual interaction
+  useEffect(() => {
+    const t = setInterval(() => go(ai + 1), 3000);
+    return () => clearInterval(t);
+  }, [ai, go]);
+
   const checkScroll = useCallback(() => {
     const el = stripRef.current;
     if (!el) return;
