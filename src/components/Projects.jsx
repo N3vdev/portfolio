@@ -225,7 +225,7 @@ export default function Projects() {
             display: flex;
             flex-direction: column;
             height: 100%;
-                        margin-bottom: 2rem;
+            margin-bottom: 5rem;
           }
           .p-hdr { margin-bottom: 1rem; flex-shrink: 0; }
           .p-h2 { font-size: 1.5rem; margin-top: .3rem; }
