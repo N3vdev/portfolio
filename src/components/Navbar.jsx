@@ -1,128 +1,112 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from "react";
 
-const Navbar = () => {
-  const [scrolled, setScrolled] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState('hero')
+export default function Navbar({ active }) {
+  const [sc, setSc] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 40)
-      const sections = ['hero', 'about', 'services', 'projects', 'contact']
-      for (const id of [...sections].reverse()) {
-        const el = document.getElementById(id)
-        if (el && window.scrollY >= el.offsetTop - 200) {
-          setActiveSection(id)
-          break
-        }
-      }
-    }
-    window.addEventListener('scroll', onScroll)
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+    const h = () => setSc(window.scrollY > 50);
+    window.addEventListener("scroll", h);
+    return () => window.removeEventListener("scroll", h);
+  }, []);
 
-  const scrollTo = (id) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
-    setMobileOpen(false)
-  }
-
-  const links = [
-    { id: 'about', label: 'About' },
-    { id: 'services', label: 'Services' },
-    { id: 'projects', label: 'Projects' },
-    { id: 'contact', label: 'Contact' },
-  ]
+  const go = (id) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setOpen(false);
+  };
 
   return (
     <>
-      <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${scrolled ? 'py-3' : 'py-6'}`}
-        style={{
-          background: scrolled ? 'rgba(7,3,15,0.85)' : 'transparent',
-          backdropFilter: scrolled ? 'blur(20px)' : 'none',
-          borderBottom: scrolled ? '1px solid rgba(139,92,246,0.12)' : 'none',
-        }}>
-        <div className="main-container flex items-center justify-between">
+      <style>{`
+        .nav {
+          position: fixed; top: 1.1rem; left: 50%; transform: translateX(-50%);
+          z-index: 1000; width: calc(100% - 2.5rem); max-width: 1320px; transition: all .5s ease;
+        }
+        .nav-pill {
+          display: flex; align-items: center; justify-content: space-between;
+          padding: .62rem 1rem .62rem 1.4rem; background: rgba(8,8,14,.38);
+          border: 1px solid rgba(255,255,255,.065); border-radius: 999px;
+          backdrop-filter: blur(24px) saturate(180%); transition: all .42s;
+        }
+        .nav.sc .nav-pill {
+          background: rgba(6,6,9,.9); border-color: rgba(255,255,255,.09);
+          box-shadow: 0 4px 30px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+        }
+        .nlogo {
+          font-family: 'Syne', sans-serif; font-weight: 800; font-size: .92rem; color: #fff;
+          cursor: pointer; letter-spacing: -.02em; display: flex; align-items: center; gap: .42rem;
+        }
+        .nlogo-dot {
+          width: 6px; height: 6px; border-radius: 50%; background: #7B2FF7;
+          box-shadow: 0 0 8px #7B2FF7; animation: pdp 3s ease-in-out infinite; flex-shrink: 0;
+        }
+        @keyframes pdp { 0%,100% { opacity: 1; } 50% { opacity: .35; } }
+        .nlinks { display: flex; gap: .12rem; }
+        .nitem {
+          font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .06em;
+          text-transform: uppercase; color: rgba(255,255,255,.33); cursor: pointer;
+          padding: .38rem .82rem; border-radius: 999px; transition: all .2s; border: 1px solid transparent;
+        }
+        .nitem:hover { color: #fff; background: rgba(255,255,255,.05); }
+        .nitem.on { color: #fff; background: rgba(123,47,247,.14); border-color: rgba(123,47,247,.2); }
+        .ncta {
+          font-family: 'DM Mono', monospace; font-size: .63rem; letter-spacing: .07em;
+          text-transform: uppercase; color: #fff; background: rgba(123,47,247,.88); border: none;
+          padding: .44rem 1.05rem; border-radius: 999px; cursor: pointer; transition: all .26s;
+          box-shadow: 0 2px 14px rgba(123,47,247,.28);
+        }
+        .ncta:hover { background: #8c3fff; box-shadow: 0 4px 22px rgba(123,47,247,.48); transform: translateY(-1px); }
+        .nburg { display: none; background: none; border: none; cursor: pointer; color: #fff; padding: .4rem; }
+        .mdrawer {
+          position: fixed; inset: 0; z-index: 999; background: rgba(6,6,9,.97);
+          backdrop-filter: blur(20px); display: flex; flex-direction: column;
+          align-items: center; justify-content: center; gap: 1.6rem;
+        }
+        .mdrawer .nitem { font-size: .95rem; padding: .62rem 2.2rem; }
+        @media(max-width:660px) { .nlinks, .ncta { display: none; } .nburg { display: block; } }
+      `}</style>
 
-          {/* Logo */}
-          <button onClick={() => scrollTo('hero')}
-            className="font-heading font-bold text-xl tracking-wider text-white">
-            Nev<span style={{
-              background: 'linear-gradient(90deg, #c084fc, #7B2FF7)',
-              WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            }}>.</span>
-          </button>
-
-          {/* Desktop links */}
-          <div className="hidden md:flex items-center gap-10">
-            {links.map(link => (
-              <button key={link.id} onClick={() => scrollTo(link.id)}
-                className="text-sm font-medium tracking-wide transition-all duration-300 relative"
-                style={{
-                  color: activeSection === link.id ? 'rgba(192,132,252,1)' : 'rgba(255,255,255,0.45)',
-                }}>
-                {link.label}
-                {activeSection === link.id && (
-                  <span className="absolute -bottom-1 left-0 right-0 h-px"
-                    style={{ background: 'linear-gradient(90deg, #7B2FF7, transparent)' }} />
-                )}
-              </button>
+      <nav className={`nav${sc ? " sc" : ""}`}>
+        <div className="nav-pill">
+          <div className="nlogo" onClick={() => go("hero")}>
+            <div className="nlogo-dot" />
+            Nev.
+          </div>
+          <div className="nlinks">
+            {["home", "about", "projects"].map(s => (
+              <div
+                key={s}
+                className={`nitem${active === s ? " on" : ""}`}
+                onClick={() => go(s)}
+              >
+                {s[0].toUpperCase() + s.slice(1)}
+              </div>
             ))}
           </div>
-
-          {/* CTA */}
-          <div className="hidden md:flex">
-            <button onClick={() => scrollTo('contact')}
-              className="px-6 py-2.5 rounded-full text-sm font-medium tracking-wide text-white transition-all duration-300"
-              style={{
-                background: 'linear-gradient(135deg, rgba(123,47,247,0.2), rgba(157,78,221,0.15))',
-                border: '1px solid rgba(139,92,246,0.35)',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(123,47,247,0.4), rgba(157,78,221,0.3))'
-                e.currentTarget.style.borderColor = 'rgba(139,92,246,0.6)'
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(123,47,247,0.2), rgba(157,78,221,0.15))'
-                e.currentTarget.style.borderColor = 'rgba(139,92,246,0.35)'
-              }}>
-              Let's Talk
-            </button>
-          </div>
-
-          {/* Hamburger */}
-          <button className="md:hidden flex flex-col gap-1.5 p-2"
-            onClick={() => setMobileOpen(!mobileOpen)}>
-            <span className={`w-6 h-px transition-all duration-300 ${mobileOpen ? 'rotate-45 translate-y-[7px]' : ''}`}
-              style={{ background: 'rgba(192,132,252,0.8)' }} />
-            <span className={`w-6 h-px transition-all duration-300 ${mobileOpen ? 'opacity-0' : ''}`}
-              style={{ background: 'rgba(192,132,252,0.8)' }} />
-            <span className={`w-6 h-px transition-all duration-300 ${mobileOpen ? '-rotate-45 -translate-y-[7px]' : ''}`}
-              style={{ background: 'rgba(192,132,252,0.8)' }} />
+          <button className="ncta" onClick={() => go("contact")}>Contact Me</button>
+          <button className="nburg" onClick={() => setOpen(o => !o)}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
           </button>
         </div>
       </nav>
 
-      {/* Mobile menu */}
-      <div className={`fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 transition-all duration-500 ${mobileOpen ? 'opacity-100 pointer-events-all' : 'opacity-0 pointer-events-none'}`}
-        style={{ background: 'rgba(7,3,15,0.97)', backdropFilter: 'blur(20px)' }}>
-        {links.map((link, i) => (
-          <button key={link.id} onClick={() => scrollTo(link.id)}
-            className="font-heading font-bold text-4xl transition-all duration-300"
-            style={{
-              color: activeSection === link.id ? 'rgba(192,132,252,1)' : 'rgba(255,255,255,0.7)',
-              animationDelay: `${i * 0.07}s`,
-            }}>
-            {link.label}
-          </button>
-        ))}
-        <button onClick={() => scrollTo('contact')}
-          className="px-8 py-3 rounded-full text-base font-medium text-white mt-4"
-          style={{ background: 'linear-gradient(135deg, #7B2FF7, #9d4edd)', border: '1px solid rgba(139,92,246,0.5)' }}>
-          Let's Talk
-        </button>
-      </div>
+      {open && (
+        <div className="mdrawer" onClick={() => setOpen(false)}>
+          {["home", "about", "projects", "contact"].map(s => (
+            <div
+              key={s}
+              className="nitem"
+              onClick={e => { e.stopPropagation(); go(s); }}
+            >
+              {s[0].toUpperCase() + s.slice(1)}
+            </div>
+          ))}
+        </div>
+      )}
     </>
-  )
+  );
 }
-
-export default Navbar

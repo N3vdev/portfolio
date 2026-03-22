@@ -1,0 +1,143 @@
+import { useState, useRef } from "react";
+import { useInView } from "../hooks";
+
+export default function Contact() {
+  const ref = useRef(null);
+  const v = useInView(ref, .1);
+  const [copied, setCopied] = useState(false);
+
+  const copy = () => {
+    navigator.clipboard.writeText("nevinabraham77@gmail.com");
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2200);
+  };
+
+  return (
+    <>
+      <style>{`
+        .contact { min-height: 100vh; background: #060609; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; padding: 8rem 2.5rem; }
+        .c-grid { position: absolute; inset: 0; background-image: radial-gradient(circle, rgba(255,255,255,.04) 1px, transparent 1px); background-size: 44px 44px; mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); -webkit-mask-image: radial-gradient(ellipse 65% 65% at 50% 50%, black, transparent); }
+        .c-orb { position: absolute; width: 600px; height: 400px; border-radius: 50%; pointer-events: none; background: radial-gradient(ellipse, rgba(123,47,247,.045) 0%, transparent 65%); top: 50%; left: 50%; transform: translate(-50%,-50%); }
+        .c-inner { position: relative; z-index: 2; max-width: 1320px; width: 100%; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+        .c-h2 { font-family: 'Syne', sans-serif; font-size: clamp(2.4rem,6vw,4.4rem); font-weight: 800; color: #fff; line-height: .9; letter-spacing: -.04em; margin: 1.1rem 0 1.5rem; }
+        .c-sub { font-family: 'DM Sans', sans-serif; font-size: .93rem; line-height: 1.82; color: rgba(255,255,255,.26); font-weight: 300; }
+        .c-right { display: flex; flex-direction: column; gap: .75rem; padding-top: .5rem; }
+
+        .email-card { display: flex; align-items: center; gap: .9rem; background: rgba(255,255,255,.022); border: 1px solid rgba(255,255,255,.07); border-radius: 18px; padding: 1.1rem 1.4rem; cursor: pointer; position: relative; transition: all .32s; }
+        .email-card:hover { background: rgba(123,47,247,.06); border-color: rgba(123,47,247,.2); transform: translateY(-2px); }
+        .eico { width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0; background: rgba(123,47,247,.11); border: 1px solid rgba(123,47,247,.15); display: flex; align-items: center; justify-content: center; color: rgba(155,100,240,.9); }
+        .etxt { font-family: 'DM Mono', monospace; font-size: .8rem; letter-spacing: .02em; color: rgba(255,255,255,.62); display: block; text-align: left; }
+        .ehint { font-family: 'DM Mono', monospace; font-size: .55rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.15); transition: color .28s; display: block; margin-top: .16rem; }
+        .email-card:hover .ehint { color: rgba(155,100,240,.5); }
+        .ctoast { position: absolute; top: -2.3rem; left: 50%; transform: translateX(-50%); font-family: 'DM Mono', monospace; font-size: .58rem; letter-spacing: .1em; background: #7B2FF7; color: #fff; padding: .26rem .78rem; border-radius: 999px; white-space: nowrap; opacity: 0; transition: opacity .22s; pointer-events: none; }
+        .ctoast.show { opacity: 1; }
+
+        .socials-label { font-family: 'DM Mono', monospace; font-size: .56rem; letter-spacing: .16em; text-transform: uppercase; color: rgba(255,255,255,.16); margin-bottom: .55rem; }
+        .socials { display: flex; gap: .55rem; }
+        .sb { height: 44px; padding: 0 1.1rem; border-radius: 12px; border: 1px solid rgba(255,255,255,.07); background: rgba(255,255,255,.018); display: flex; align-items: center; gap: .52rem; color: rgba(255,255,255,.3); text-decoration: none; transition: all .26s; font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; }
+        .sb:hover { border-color: rgba(123,47,247,.28); color: #fff; background: rgba(123,47,247,.08); transform: translateY(-2px); }
+
+        .avail-card { background: rgba(61,219,133,.04); border: 1px solid rgba(61,219,133,.12); border-radius: 18px; padding: 1.15rem 1.4rem; display: flex; align-items: center; gap: .9rem; }
+        .avail-dot { width: 7px; height: 7px; border-radius: 50%; background: #3DDB85; flex-shrink: 0; box-shadow: 0 0 0 0 rgba(61,219,133,.4); animation: pr2 2.6s ease infinite; }
+        @keyframes pr2 { 0% { box-shadow: 0 0 0 0 rgba(61,219,133,.35); } 70% { box-shadow: 0 0 0 8px rgba(61,219,133,0); } 100% { box-shadow: 0 0 0 0 rgba(61,219,133,0); } }
+        .avail-txt { font-family: 'DM Sans', sans-serif; font-size: .82rem; color: rgba(255,255,255,.4); font-weight: 300; }
+        .avail-txt b { color: #3DDB85; font-weight: 500; }
+        .c-footer { margin-top: 2rem; font-family: 'DM Mono', monospace; font-size: .57rem; letter-spacing: .15em; text-transform: uppercase; color: rgba(255,255,255,.09); }
+
+@media(max-width:760px) {
+  .projects {
+    padding: 5rem 0 1.5rem;
+    justify-content: flex-start;
+    min-height: 100vh;
+    height: auto;
+  }
+  .p-wrap { padding: 0 1.25rem; }
+  .p-hdr { margin-bottom: 1.25rem; }
+  .p-h2 { font-size: 1.6rem; margin-top: .4rem; }
+  .pcard {
+    grid-template-columns: 1fr;
+    height: auto;
+    margin-bottom: .85rem;
+  }
+  .pvis {
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,.05);
+  }
+  .pinfo { padding: 1.1rem 1.15rem; }
+  .ptit { font-size: 1rem; }
+  .pdesc { font-size: .78rem; line-height: 1.65; margin-bottom: .85rem; }
+  .ptags { margin-bottom: .85rem; }
+  .pstrip-wrap { margin-top: .75rem; }
+  .si { flex: 0 0 130px; padding: .75rem .85rem; }
+  .si.on { flex: 0 0 165px; }
+  .pstrip-btn.sleft  { left: -10px; }
+  .pstrip-btn.sright { right: -10px; }
+}
+      `}</style>
+
+      <section id="contact" className="contact" ref={ref}>
+        <div className="c-grid" />
+        <div className="c-orb" />
+        <div className="noise" />
+
+        <div className="c-inner">
+          {/* Left: headline */}
+          <div>
+            <div className={`fu${v ? " in" : ""}`}><span className="eyebrow">Get In Touch</span></div>
+            <h2 className={`c-h2 fu d1${v ? " in" : ""}`}>Have a<br />project<br />in mind?</h2>
+            <p className={`c-sub fu d2${v ? " in" : ""}`}>
+              Let's make it happen — I'm open to freelance work, collaborations, and full-time opportunities.
+            </p>
+            <div className={`c-footer fu d5${v ? " in" : ""}`}>© 2025 Nevin Abraham </div>
+          </div>
+
+          {/* Right: actions */}
+          <div className={`c-right fu d2${v ? " in" : ""}`}>
+            {/* Availability */}
+            <div className="avail-card">
+              <div className="avail-dot" />
+              <div className="avail-txt"><b>Available for work</b> — Open to new projects in 2025</div>
+            </div>
+
+            {/* Email */}
+            <div style={{ position: "relative" }}>
+              <div className="email-card" onClick={copy}>
+                <div className="eico">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                </div>
+                <div>
+                  <span className="etxt">nevinabraham77@gmail.com</span>
+                  <span className="ehint">{copied ? "✓ Copied to clipboard" : "Click to copy email"}</span>
+                </div>
+                <div className={`ctoast${copied ? " show" : ""}`}>Copied!</div>
+              </div>
+            </div>
+
+            {/* Socials */}
+            <div>
+              <div className="socials-label">Find me on</div>
+              <div className="socials">
+                <a href="https://github.com/n3vdev" target="_blank" rel="noreferrer" className="sb">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
+                  </svg>
+                  GitHub
+                </a>
+                <a href="mailto:nevinabraham77@gmail.com" className="sb">
+                  <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                    <polyline points="22,6 12,13 2,6" />
+                  </svg>
+                  Email
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </>
+  );
+}
