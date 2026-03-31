@@ -4,7 +4,7 @@ export const PROJECTS = [
 
   {
     id: 1,
-    title: "Talentis Recruitment Platform",
+    title: "Talentis Recruitment Website",
     image: "Talentis.png",
     category: "Website",
     year: "2026",
