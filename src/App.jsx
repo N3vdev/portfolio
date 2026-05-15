@@ -137,7 +137,7 @@ function BlobCanvas({ sectionIndex, loaded = false }) {
       zIndex:0, pointerEvents:"none",
       transform: loaded ? "scale(1)" : "scale(3)",
       transition: loaded
-        ? "transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)"
+        ? "transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.9s"
         : "none",
       transformOrigin: "center center",
     }} />
@@ -197,6 +197,14 @@ export default function App() {
   useEffect(() => {
     const onWheel = (e) => {
       e.preventDefault();
+      // During cooldown, drain the accumulator so trackpad momentum
+      // events don't silently build up and fire a second jump the
+      // instant the cooldown expires.
+      if (cooldown.current) {
+        wheelAcc.current = 0;
+        clearTimeout(wheelTimer.current);
+        return;
+      }
       wheelAcc.current += e.deltaY;
       clearTimeout(wheelTimer.current);
       wheelTimer.current = setTimeout(() => { wheelAcc.current = 0; }, 200);
@@ -255,7 +263,7 @@ export default function App() {
   const sections = [
     <Hero     key="hero"     loaded={loaded} />,
     <About    key="about"    />,
-    <Projects key="projects" />,
+    <Projects key="projects" isActive={idx === SECTIONS.indexOf("projects")} />,
     <Contact  key="contact"  />,
   ];
 
@@ -282,15 +290,19 @@ export default function App() {
         }
 
         .snap-page.is-enter {
+          opacity: 1;
           animation: page-enter-down ${TRANSITION_MS}ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
         }
         .snap-page.is-enter.from-above {
+          opacity: 1;
           animation: page-enter-up ${TRANSITION_MS}ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
         }
         .snap-page.is-exit {
+          opacity: 1;
           animation: page-exit-up ${TRANSITION_MS}ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
         }
         .snap-page.is-exit.to-below {
+          opacity: 1;
           animation: page-exit-down ${TRANSITION_MS}ms cubic-bezier(0.76, 0, 0.24, 1) forwards;
         }
         .snap-page.is-active {
@@ -300,20 +312,20 @@ export default function App() {
         }
 
         @keyframes page-enter-down {
-          from { transform: translateY(100%); opacity: 0; }
-          to   { transform: translateY(0);    opacity: 1; pointer-events: auto; }
+          from { transform: translateY(100%); }
+          to   { transform: translateY(0); pointer-events: auto; }
         }
         @keyframes page-enter-up {
-          from { transform: translateY(-100%); opacity: 0; }
-          to   { transform: translateY(0);     opacity: 1; pointer-events: auto; }
+          from { transform: translateY(-100%); }
+          to   { transform: translateY(0); pointer-events: auto; }
         }
         @keyframes page-exit-up {
-          from { transform: translateY(0);     opacity: 1; }
-          to   { transform: translateY(-100%); opacity: 0; }
+          from { transform: translateY(0); }
+          to   { transform: translateY(-100%); }
         }
         @keyframes page-exit-down {
-          from { transform: translateY(0);    opacity: 1; }
-          to   { transform: translateY(100%); opacity: 0; }
+          from { transform: translateY(0); }
+          to   { transform: translateY(100%); }
         }
 
         .scroll-dots {

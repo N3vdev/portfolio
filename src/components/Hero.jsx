@@ -95,7 +95,7 @@ export default function Hero({ loaded = false }) {
         }
         .btn-fill:hover { background: #8c3fff; transform: translateY(-2px); box-shadow: 0 8px 36px rgba(123,47,247,.5), inset 0 1px 0 rgba(255,255,255,.12); }
         .h-scroll {
-          position: absolute; bottom: 2.2rem; left: 2.5rem; z-index: 3;
+          position: absolute; bottom: 2.2rem; right: 2.5rem; z-index: 3;
           display: flex; align-items: center; gap: .65rem; cursor: pointer;
           opacity: 0;
           transition: opacity 0.6s ease 1.2s;

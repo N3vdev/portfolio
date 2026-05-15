@@ -7,7 +7,7 @@ import ProjectIcon from "./ProjectIcon";
 const AUTO_INTERVAL = 4000; // ms between auto-advances
 // ────────────────────────────────────────────────────
 
-export default function Projects() {
+export default function Projects({ isActive = false }) {
   const ref = useRef(null);
   const v = useInView(ref, .04);
   const [ai, setAi] = useState(0);
@@ -16,31 +16,10 @@ export default function Projects() {
   const [canScrollRight, setCanScrollRight] = useState(false);
   const ts = useRef(null);
   const stripRef = useRef(null);
-  const timerRef = useRef(null); // holds the auto-advance interval
+  const timerRef = useRef(null);
 
-  const go = useCallback((next, isAuto = false) => {
-    if (slide) return;
-    const n = ((next % PROJECTS.length) + PROJECTS.length) % PROJECTS.length;
-    setSlide(true);
-    setTimeout(() => { setAi(n); setSlide(false); }, 280);
-
-    // If user manually navigated, reset the timer so it doesn't
-    // immediately fire again right after their click
-    if (!isAuto) {
-      clearInterval(timerRef.current);
-      timerRef.current = setInterval(() => {
-        setAi(prev => {
-          const next = (prev + 1) % PROJECTS.length;
-          setSlide(true);
-          setTimeout(() => setSlide(false), 280);
-          return next;
-        });
-      }, AUTO_INTERVAL);
-    }
-  }, [slide]);
-
-  // ── Auto-advance on mount ──────────────────────────
-  useEffect(() => {
+  const startTimer = useCallback(() => {
+    clearInterval(timerRef.current);
     timerRef.current = setInterval(() => {
       setAi(prev => {
         const next = (prev + 1) % PROJECTS.length;
@@ -49,9 +28,25 @@ export default function Projects() {
         return next;
       });
     }, AUTO_INTERVAL);
+  }, []);
 
+  const go = useCallback((next) => {
+    if (slide) return;
+    const n = ((next % PROJECTS.length) + PROJECTS.length) % PROJECTS.length;
+    setSlide(true);
+    setTimeout(() => { setAi(n); setSlide(false); }, 280);
+    startTimer();
+  }, [slide, startTimer]);
+
+  // ── Auto-advance: only run when this page is active ──
+  useEffect(() => {
+    if (isActive) {
+      startTimer();
+    } else {
+      clearInterval(timerRef.current);
+    }
     return () => clearInterval(timerRef.current);
-  }, []); // runs once — timer restarts itself via go() on manual nav
+  }, [isActive, startTimer]);
 
   // ── Keyboard nav ──────────────────────────────────
   useEffect(() => {
@@ -134,7 +129,7 @@ export default function Projects() {
           box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
           transition: border-color .5s;
           display: grid; grid-template-columns: 1fr 1fr;
-          height: 400px;
+          height: clamp(280px, calc(100vh - 350px), 460px);
           margin-bottom: 1rem;
           position: relative;
         }
@@ -248,6 +243,17 @@ export default function Projects() {
         .si.on .si-tit { color: #fff; }
         .si-cat { font-family: 'DM Mono', monospace; font-size: .58rem; color: rgba(255,255,255,.22); margin-top: .25rem; letter-spacing: .06em; text-transform: uppercase; }
 
+        /* ── Laptop / compact height ── */
+        @media(max-height: 900px) and (min-width: 761px) {
+          .projects { padding: 5rem 0 1.5rem; }
+          .p-hdr { margin-bottom: 1rem; }
+          .p-h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); }
+        }
+        @media(max-height: 720px) and (min-width: 761px) {
+          .projects { padding: 4rem 0 1rem; }
+          .pdesc { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        }
+
         /* ── Mobile ── */
         @media(max-width: 760px) {
           .projects { height: 100vh; min-height: unset; padding: 5.5rem 0 1.5rem; justify-content: flex-start; overflow: hidden; }
@@ -300,8 +306,8 @@ export default function Projects() {
 
             <div className="pvis">
               {p.image
-                ? <div style={{ width: "calc(100% - 1rem)", height: "calc(100% - 1rem)", borderRadius: "12px", overflow: "hidden", flexShrink: 0, position: "relative", zIndex: 1 }}>
-                    <img src={p.image} alt={p.title} className={`pimg${slide ? " out" : ""}`} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                ? <div style={{ width: "calc(100% - 1rem)", height: "calc(100% - 1rem)", borderRadius: "12px", overflow: "hidden", flexShrink: 0, position: "relative", zIndex: 1, background: "#fff" }}>
+                    <img src={p.image} alt={p.title} className={`pimg${slide ? " out" : ""}`} style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }} />
                   </div>
                 : <>
                     <div className="pvis-bg" style={{ background: `radial-gradient(ellipse at 50% 50%, ${p.color}18 0%, transparent 65%)` }} />
