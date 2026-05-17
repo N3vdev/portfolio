@@ -45,20 +45,34 @@ export default function Projects({ isActive = false }) {
     return () => window.removeEventListener("click", clickOutside);
   }, [showFilters]);
 
-  // ── Body Scroll Lock for List View ────────────────
+  // ── Body Scroll Lock & History for List View ──────
   useEffect(() => {
     if (isListView) {
       document.body.style.overflow = "hidden";
       window.dispatchEvent(new CustomEvent("lock-scroll", { detail: true }));
+      // Push state so back button works
+      window.history.pushState({ isListView: true }, "");
     } else {
       document.body.style.overflow = "unset";
       window.dispatchEvent(new CustomEvent("lock-scroll", { detail: false }));
     }
+
+    const onPopState = () => {
+      // If user presses back, close the list view
+      setIsListView(false);
+    };
+
+    window.addEventListener("popstate", onPopState);
     return () => { 
       document.body.style.overflow = "unset"; 
       window.dispatchEvent(new CustomEvent("lock-scroll", { detail: false }));
+      window.removeEventListener("popstate", onPopState);
     };
   }, [isListView]);
+
+  const closeListView = () => {
+    if (isListView) window.history.back();
+  };
 
   const startTimer = useCallback(() => {
     clearInterval(timerRef.current);
@@ -167,28 +181,36 @@ export default function Projects({ isActive = false }) {
         .p-counter b { color: rgba(255,255,255,.85); }
 
         .btn-list-all {
-          font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .08em;
+          font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .02em;
           text-transform: uppercase; color: #fff; 
-          background: rgba(123,47,247,0.85); 
-          border: 1px solid rgba(123,47,247,0.5);
-          padding: .4rem .9rem; border-radius: 999px; cursor: pointer;
-          transition: all 0.3s;
-          animation: btn-glow-pulse 2.5s infinite alternate ease-in-out;
+          background: rgba(255, 255, 255, 0.03); 
+          border: 1.5px solid rgba(123, 47, 247, 0.6);
+          padding: .6rem 1.4rem; border-radius: 999px; cursor: pointer;
+          transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+          animation: btn-glow-pulse 3s infinite ease-in-out;
           flex-shrink: 0;
+          backdrop-filter: blur(10px);
+          position: relative;
+          overflow: hidden;
         }
-        .btn-list-all:hover { transform: scale(1.05); background: #7B2FF7; }
+        .btn-list-all:hover { 
+          background: rgba(123, 47, 247, 0.15); 
+          border-color: #fff;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 8px 25px rgba(123, 47, 247, 0.4);
+        }
+        .btn-list-all:active { transform: translateY(0) scale(0.98); }
 
         @keyframes btn-glow-pulse {
-          from { 
-            box-shadow: 0 0 8px rgba(123,47,247,0.3); 
+          0%, 100% { 
+            box-shadow: 0 0 10px rgba(123,47,247,0.2), inset 0 0 0px rgba(123,47,247,0); 
             border-color: rgba(123,47,247,0.5); 
           }
-          to { 
-            box-shadow: 0 0 18px rgba(180,120,255,0.7); 
-            border-color: rgba(200,150,255,0.8); 
+          50% { 
+            box-shadow: 0 0 25px rgba(123,47,247,0.6), inset 0 0 12px rgba(123,47,247,0.2); 
+            border-color: rgba(180,120,255,0.9); 
           }
         }
-
         /* ── Project List View Overlay ── */
         .p-list-view {
           position: fixed; inset: 0; z-index: 9999;
@@ -209,8 +231,12 @@ export default function Projects({ isActive = false }) {
           display: flex; align-items: center; justify-content: space-between;
         }
         .pl-back {
-          font-family: 'DM Mono', monospace; font-size: .7rem; color: rgba(255,255,255,0.5);
-          display: flex; align-items: center; gap: .4rem; cursor: pointer;
+          font-family: 'Syne', monospace; font-size: 1.2rem;font-weight: 700; color: rgba(255,255,255,0.7);
+          display: flex; align-items: center; gap: .5rem; cursor: pointer;
+        }
+
+        .pl-back-arrow {
+          font-size: 1.7rem; color: rgba(255,255,255,0.7);
         }
         
         .pl-grid {
@@ -253,33 +279,40 @@ export default function Projects({ isActive = false }) {
         /* ── Filter Dropdown ── */
         .p-filter { position: relative; z-index: 300; }
         .p-filter-btn {
-          font-family: 'DM Mono', monospace; font-size: .65rem; letter-spacing: .1em; 
-          color: rgba(255,255,255,.6); padding: .4rem 1.1rem; border-radius: 999px; 
-          background: rgba(123,47,247,0.1); border: 1px solid rgba(123,47,247,0.3);
-          display: flex; align-items: center; gap: .6rem; cursor: pointer; transition: all .2s;
+          font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .02em; 
+          color: #fff; padding: .6rem 1.4rem; border-radius: 999px; 
+          background: rgba(255, 255, 255, 0.03); border: 1.5px solid rgba(123, 47, 247, 0.6);
+          display: flex; align-items: center; gap: .6rem; cursor: pointer; transition: all .4s cubic-bezier(0.2, 1, 0.3, 1);
           backdrop-filter: blur(10px); text-transform: uppercase;
+          box-shadow: 0 4px 15px rgba(123, 47, 247, 0.1);
         }
-        .p-filter-btn:hover { background: rgba(123,47,247,0.2); border-color: rgba(123,47,247,0.6); color: #fff; }
+        .p-filter-btn:hover { 
+          background: rgba(123, 47, 247, 0.15); 
+          border-color: #fff;
+          transform: translateY(-2px) scale(1.02);
+          box-shadow: 0 8px 25px rgba(123, 47, 247, 0.4);
+        }
+        .p-filter-btn:active { transform: translateY(0) scale(0.98); }
         .p-filter-btn i { font-size: .5rem; transition: transform .3s; }
         .p-filter-btn.open i { transform: rotate(180deg); }
 
         .p-filter-menu {
           position: absolute; top: calc(100% + .5rem); right: 0; 
-          background: rgba(12,12,22,0.95); border: 1px solid rgba(255,255,255,0.1);
-          border-radius: 16px; padding: .5rem; min-width: 160px;
-          backdrop-filter: blur(20px); box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+          background: rgba(16,16,28,0.98); border: 1px solid rgba(123,47,247,0.4);
+          border-radius: 16px; padding: .5rem; min-width: 180px;
+          backdrop-filter: blur(24px); box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 20px rgba(123,47,247,0.15);
           opacity: 0; transform: translateY(-10px); pointer-events: none;
           transition: all .3s cubic-bezier(0.2, 1, 0.3, 1);
         }
         .p-filter-menu.open { opacity: 1; transform: translateY(0); pointer-events: all; }
         
         .p-filter-opt {
-          font-family: 'DM Mono', monospace; font-size: .6rem; letter-spacing: .05em;
-          color: rgba(255,255,255,0.4); padding: .6rem 1rem; border-radius: 10px;
+          font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .02em;
+          color: rgba(255,255,255,0.65); padding: .7rem 1rem; border-radius: 10px;
           cursor: pointer; transition: all .2s; white-space: nowrap; text-transform: uppercase;
         }
-        .p-filter-opt:hover { background: rgba(255,255,255,0.05); color: #fff; }
-        .p-filter-opt.on { background: rgba(123,47,247,0.15); color: #7B2FF7; }
+        .p-filter-opt:hover { background: rgba(255,255,255,0.08); color: #fff; }
+        .p-filter-opt.on { background: rgba(123,47,247,0.25); color: #fff; border: 1px solid rgba(123,47,247,0.5); }
 
         /* ── Carousel Stage ── */
 .p-stage {
@@ -657,7 +690,7 @@ export default function Projects({ isActive = false }) {
         {/* ── Mobile List View Overlay ── */}
         <div className={`p-list-view${isListView ? " open" : ""}`}>
           <div className="pl-hdr">
-            <div className="pl-back" onClick={() => setIsListView(false)}>
+            <div className="pl-back" onClick={closeListView}>
               <span>←</span> Back
             </div>
             <div className="p-filter">
