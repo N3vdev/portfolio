@@ -596,9 +596,9 @@ export default function Projects({ isActive = false }) {
 
         /* ── Mobile ── */
         @media(max-width: 760px) {
-          .projects { height: 100vh; padding: 6rem 0 2rem; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; }
-          .p-wrap { position: relative; padding: 0 1.5rem; width: 100%; }
-          .p-hdr-wrap { margin-bottom: 2rem; }
+          .projects { height: 100%; padding: 4.5rem 0 1.5rem; display: flex; flex-direction: column; justify-content: flex-start; overflow: hidden; }
+          .p-wrap { position: relative; padding: 0 1.2rem; width: 100%; }
+          .p-hdr-wrap { margin-bottom: 0rem; }
           .p-ftr-wrap { display: none; }
 
           .pl-hdr { padding: 1.5rem 1.2rem; }
@@ -607,7 +607,7 @@ export default function Projects({ isActive = false }) {
           .pl-tit { font-size: 1rem; }
           .pl-desc { font-size: 0.78rem; }
 
-          .p-hdr { display: flex; flex-direction: column; gap: 1.2rem; width: 100%; margin-bottom: 0; }
+          .p-hdr { display: flex; flex-direction: column; gap: 0.6rem; width: 100%; margin-bottom: 0; }
 
           .p-hdr-actions { 
             display: flex;
@@ -617,33 +617,39 @@ export default function Projects({ isActive = false }) {
             margin-top: 0; 
           }
           
-          .p-h2 { font-size: clamp(1.8rem, 10vw, 2.4rem); }
-          .btn-list-all { display: block; margin-bottom: 10px; }
+          .p-h2 { font-size: 1.8rem; }
+          .btn-list-all { display: block; margin-bottom: 4px; padding: 0.5rem 1.2rem; font-size: 0.7rem; }
           
-          .p-stage { position: relative; height: auto; margin: 0; perspective: none; flex: 1; display: flex; align-items: center; }
-          .p-carousel { flex-direction: column; height: auto; }
+          .p-stage { position: relative; flex: 1; margin: 0; perspective: none; display: flex; align-items: center; padding: 0.5rem 1rem; min-height: 0; }
+          .p-carousel { flex-direction: column; height: 100%; width: 100%; display: flex; align-items: center; justify-content: center; }
           .pcard { 
             position: relative; width: 100%; display: none; 
-            height: clamp(380px, 58vh, 480px); /* Reduced height for better fit */
+            height: 100%;
+            max-height: 500px;
+            min-height: 340px;
             grid-template-columns: 1fr; 
-            grid-template-rows: 1fr 1fr; 
+            grid-template-rows: 50% 50%; 
             transform: none !important; opacity: 1 !important; 
             filter: none !important; pointer-events: all !important; margin: 0 auto;
             max-width: 380px; 
+            overflow: hidden;
           }
           .pcard.active { display: grid; }
           .pvis { 
             height: 100%; border-right: none; border-bottom: 1px solid rgba(255,255,255,.07); 
             width: 100%;
           }
-          .pimg { padding: 1.2rem; }
-          .pinfo { padding: 1.2rem 1.2rem; }
+          .pimg { padding: 0.2rem; }
+          .pinfo { padding: 1rem 1rem; justify-content: flex-start; gap: 0.5rem; }
           .ptit { font-size: 1rem; }
-          .pdesc { font-size: .76rem; -webkit-line-clamp: 3; margin-bottom: .8rem; line-height: 1.6; }
+          .pdesc { font-size: 0.75rem; -webkit-line-clamp: 3; margin-bottom: 0.5rem; line-height: 1.5; }
           .p-stage-nav { display: none; }
+          .pnav { margin-top: auto; padding-top: 0.5rem; }
           .pnav .narr { display: flex; }
-          .narr { width: 32px; height: 32px; font-size: .78rem; }
-          .bvisit, .bdis { padding: .5rem 1rem; font-size: .55rem; }
+          .p-filter-btn { background: rgba(123, 47, 247, 0.85); border-color: #7B2FF7; padding: 0.5rem 1.2rem; font-size: 0.7rem; box-shadow: 0 4px 15px rgba(123, 47, 247, 0.3); }
+          .narr { width: 32px; height: 32px; font-size: 0.75rem; }
+          .bvisit, .bdis { padding: 0.5rem 1rem; font-size: 0.55rem; }
+          .ptags { display: none; }
         }
       `}</style>
 
@@ -657,7 +663,7 @@ export default function Projects({ isActive = false }) {
                 <span className="eyebrow">Selected Work</span>
                 <h2 className="p-h2">My Projects</h2>
               </div>
-              <button className="btn-list-all" onClick={() => setIsListView(true)}>View All</button>
+              <button className="btn-list-all" onClick={() => setIsListView(true)}>View List</button>
             </div>
             
             <div className="p-hdr-actions">
@@ -668,10 +674,10 @@ export default function Projects({ isActive = false }) {
               </div>
               
               <div className="p-filter">
-                <button className={`p-filter-btn${showFilters ? " open" : ""}`} onClick={() => setShowShowFilters(!showFilters)}>
+                <button className={`p-filter-btn${showFilters && !isListView ? " open" : ""}`} onClick={() => setShowShowFilters(!showFilters)}>
                   {displayNames[filter]} <i>▼</i>
                 </button>
-                <div className={`p-filter-menu${showFilters ? " open" : ""}`}>
+                <div className={`p-filter-menu${showFilters && !isListView ? " open" : ""}`}>
                   {filterOptions.map(opt => (
                     <div 
                       key={opt} 
@@ -694,10 +700,10 @@ export default function Projects({ isActive = false }) {
               <span>←</span> Back
             </div>
             <div className="p-filter">
-              <button className={`p-filter-btn${showFilters ? " open" : ""}`} onClick={() => setShowShowFilters(!showFilters)}>
+              <button className={`p-filter-btn${showFilters && isListView ? " open" : ""}`} onClick={() => setShowShowFilters(!showFilters)}>
                 {displayNames[filter]} <i>▼</i>
               </button>
-              <div className={`p-filter-menu${showFilters ? " open" : ""}`}>
+              <div className={`p-filter-menu${showFilters && isListView ? " open" : ""}`}>
                 {filterOptions.map(opt => (
                   <div 
                     key={opt} 
