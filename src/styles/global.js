@@ -12,6 +12,7 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
 /* All sections are transparent — blob canvas shines through */
 .about, .projects, .contact, .hero {
   background: transparent !important;
+  will-change: transform, opacity;
 }
 
 /* Subtle dark veil per section so text stays legible */
@@ -32,6 +33,15 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
   pointer-events: none;
   z-index: 0;
 }
+
+/* Disable heavy backdrop-filters on mobile for performance */
+@media (max-width: 768px) {
+  .projects, .pcard, .p-filter-menu, .btn-list-all, .pl-hdr {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 .about > *, .projects > *, .contact > * {
   position: relative;
   z-index: 1;

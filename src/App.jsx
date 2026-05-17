@@ -135,6 +135,7 @@ function BlobCanvas({ sectionIndex, loaded = false }) {
     <canvas ref={canvasRef} style={{
       position:"fixed", inset:0, width:"100%", height:"100%",
       zIndex:0, pointerEvents:"none",
+      willChange: "transform",
       transform: loaded ? "scale(1)" : "scale(3)",
       transition: loaded
         ? "transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.9s"

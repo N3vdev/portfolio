@@ -354,17 +354,27 @@ export default function Projects({ isActive = false }) {
           height: 100%;
           border-radius: 24px; overflow: hidden;
           border: 1px solid rgba(255,255,255,.10);
-          background: rgba(8,8,16,0.72);
+          background: rgba(8,8,16,0.85);
           backdrop-filter: blur(24px) saturate(160%);
           -webkit-backdrop-filter: blur(24px) saturate(160%);
-          box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+          box-shadow: 0 8px 40px rgba(0,0,0,.5);
           display: grid; grid-template-columns: 1.1fr 0.9fr;
-          transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+          transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.7s ease;
           opacity: 0;
           pointer-events: none;
           transform: translateX(0) scale(0.6);
           z-index: 1;
+          will-change: transform, opacity;
         }
+
+        @media (max-width: 768px) {
+          .pcard, .p-filter-menu, .btn-list-all, .projects {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: rgba(13, 13, 21, 0.98) !important;
+          }
+        }
+
         .pcard::after {
           content: '';
           position: absolute; inset: 0; pointer-events: none; z-index: 10;
