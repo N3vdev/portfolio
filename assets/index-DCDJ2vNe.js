@@ -51,6 +51,7 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
 /* All sections are transparent — blob canvas shines through */
 .about, .projects, .contact, .hero {
   background: transparent !important;
+  will-change: transform, opacity;
 }
 
 /* Subtle dark veil per section so text stays legible */
@@ -71,6 +72,15 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
   pointer-events: none;
   z-index: 0;
 }
+
+/* Disable heavy backdrop-filters on mobile for performance */
+@media (max-width: 768px) {
+  .projects, .pcard, .p-filter-menu, .btn-list-all, .pl-hdr {
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
 .about > *, .projects > *, .contact > * {
   position: relative;
   z-index: 1;
@@ -693,17 +703,27 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
           height: 100%;
           border-radius: 24px; overflow: hidden;
           border: 1px solid rgba(255,255,255,.10);
-          background: rgba(8,8,16,0.72);
+          background: rgba(8,8,16,0.85);
           backdrop-filter: blur(24px) saturate(160%);
           -webkit-backdrop-filter: blur(24px) saturate(160%);
-          box-shadow: 0 8px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.06);
+          box-shadow: 0 8px 40px rgba(0,0,0,.5);
           display: grid; grid-template-columns: 1.1fr 0.9fr;
-          transition: all 0.7s cubic-bezier(0.2, 1, 0.3, 1);
+          transition: transform 0.7s cubic-bezier(0.2, 1, 0.3, 1), opacity 0.7s ease;
           opacity: 0;
           pointer-events: none;
           transform: translateX(0) scale(0.6);
           z-index: 1;
+          will-change: transform, opacity;
         }
+
+        @media (max-width: 768px) {
+          .pcard, .p-filter-menu, .btn-list-all, .projects {
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            background: rgba(13, 13, 21, 0.98) !important;
+          }
+        }
+
         .pcard::after {
           content: '';
           position: absolute; inset: 0; pointer-events: none; z-index: 10;
@@ -1181,7 +1201,7 @@ void main(){
   final+=fract(sin(dot(gl_FragCoord.xy,vec2(12.9898,78.233)))*43758.5453)*.03*.4;
   gl_FragColor=vec4(final,1.);
 }
-`;function af(v){const w=v.getContext("webgl")||v.getContext("experimental-webgl");if(!w)return null;const p=(J,X)=>{const B=w.createShader(J);return w.shaderSource(B,X),w.compileShader(B),B},C=w.createProgram();w.attachShader(C,p(w.VERTEX_SHADER,of)),w.attachShader(C,p(w.FRAGMENT_SHADER,sf)),w.linkProgram(C),w.useProgram(C);const _=w.createBuffer();w.bindBuffer(w.ARRAY_BUFFER,_),w.bufferData(w.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),w.STATIC_DRAW);const R=w.getAttribLocation(C,"a_pos");return w.enableVertexAttribArray(R),w.vertexAttribPointer(R,2,w.FLOAT,!1,0,0),{gl:w,uRes:w.getUniformLocation(C,"u_res"),uTime:w.getUniformLocation(C,"u_time"),uMouse:w.getUniformLocation(C,"u_mouse"),uSx:[0,1,2,3,4,5].map(J=>w.getUniformLocation(C,`u_sx${J}`))}}function uf(v){return[0,-.38,.38,-.38][v]??0}function cf({sectionIndex:v,loaded:w=!1}){const p=N.useRef(null),C=N.useRef(null),_=N.useRef({x:0,y:0}),R=N.useRef({x:0,y:0}),J=N.useRef(0),X=N.useRef([0,0,0,0,0,0]),B=N.useRef();return N.useEffect(()=>{J.current=uf(v)},[v]),N.useEffect(()=>{const K=p.current;C.current=af(K);const G=()=>{var $;K.width=window.innerWidth,K.height=window.innerHeight,($=C.current)==null||$.gl.viewport(0,0,K.width,K.height)};G(),window.addEventListener("resize",G);const ne=$=>{R.current={x:$.clientX,y:$.clientY}},W=$=>{R.current={x:$.touches[0].clientX,y:$.touches[0].clientY}};window.addEventListener("mousemove",ne),window.addEventListener("touchmove",W,{passive:!0});const re=[.055,.038,.028,.02,.015,.011],U=$=>{_.current.x+=(R.current.x-_.current.x)*.06,_.current.y+=(R.current.y-_.current.y)*.06;const D=X.current;D[0]+=(J.current-D[0])*re[0];for(let ee=1;ee<6;ee++)D[ee]+=(D[ee-1]-D[ee])*re[ee];const ke=C.current;if(ke){const{gl:ee,uRes:Q,uTime:I,uMouse:ue,uSx:V}=ke;ee.uniform2f(Q,K.width,K.height),ee.uniform1f(I,$*.001),ee.uniform2f(ue,_.current.x,K.height-_.current.y);for(let fe=0;fe<6;fe++)ee.uniform1f(V[fe],D[fe]);ee.drawArrays(ee.TRIANGLE_STRIP,0,4)}B.current=requestAnimationFrame(U)};return B.current=requestAnimationFrame(U),()=>{window.removeEventListener("resize",G),window.removeEventListener("mousemove",ne),window.removeEventListener("touchmove",W),cancelAnimationFrame(B.current)}},[]),s.jsx("canvas",{ref:p,style:{position:"fixed",inset:0,width:"100%",height:"100%",zIndex:0,pointerEvents:"none",transform:w?"scale(1)":"scale(3)",transition:w?"transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.9s":"none",transformOrigin:"center center"}})}const Xt=["hero","about","projects","contact"],Rn=900,df=950,ff=30;function pf(){const[v,w]=N.useState(!1),[p,C]=N.useState(0),[_,R]=N.useState(null),[J,X]=N.useState(1),[B,K]=N.useState(!1),[G,ne]=N.useState(!1),W=N.useRef(!1),re=N.useRef(null),U=N.useRef(0),$=N.useRef(null);N.useEffect(()=>{const Q=I=>ne(I.detail);return window.addEventListener("lock-scroll",Q),()=>window.removeEventListener("lock-scroll",Q)},[]),N.useEffect(()=>{const Q=Mo.filter(V=>V.image).map(V=>new Promise(fe=>{const be=new Image;be.onload=fe,be.onerror=fe,be.src=V.image})),I=new Promise(V=>setTimeout(V,1500)),ue=document.fonts?document.fonts.ready:Promise.resolve();Promise.all([I,ue,...Q]).then(()=>w(!0))},[]);const D=N.useCallback(Q=>{if(G)return;const I=Math.max(0,Math.min(Xt.length-1,Q));I===p||W.current||(W.current=!0,X(I>p?1:-1),R(p),C(I),K(!0),setTimeout(()=>{R(null),K(!1),W.current=!1},df))},[p,G]);N.useEffect(()=>{const Q=I=>{if(!G){if(I.preventDefault(),W.current){U.current=0,clearTimeout($.current);return}U.current+=I.deltaY,clearTimeout($.current),$.current=setTimeout(()=>{U.current=0},200),Math.abs(U.current)>=ff&&(D(p+(U.current>0?1:-1)),U.current=0)}};return window.addEventListener("wheel",Q,{passive:!1}),()=>window.removeEventListener("wheel",Q)},[D,p,G]),N.useEffect(()=>{const Q=ue=>{G||(re.current=ue.touches[0].clientY)},I=ue=>{if(G||re.current===null)return;const V=re.current-ue.changedTouches[0].clientY;Math.abs(V)>40&&D(p+(V>0?1:-1)),re.current=null};return window.addEventListener("touchstart",Q,{passive:!0}),window.addEventListener("touchend",I,{passive:!0}),()=>{window.removeEventListener("touchstart",Q),window.removeEventListener("touchend",I)}},[D,p,G]),N.useEffect(()=>{const Q=I=>{G||((I.key==="ArrowDown"||I.key==="PageDown")&&D(p+1),(I.key==="ArrowUp"||I.key==="PageUp")&&D(p-1))};return window.addEventListener("keydown",Q),()=>window.removeEventListener("keydown",Q)},[D,p,G]),N.useEffect(()=>{const Q=I=>{const ue=Xt.indexOf(I.detail);ue!==-1&&D(ue)};return window.addEventListener("snapto",Q),()=>window.removeEventListener("snapto",Q)},[D]);const ke=N.useCallback(Q=>{const I=Xt.indexOf(Q);I!==-1&&D(I)},[D]),ee=[s.jsx(Zd,{loaded:v},"hero"),s.jsx(tf,{},"about"),s.jsx(nf,{isActive:p===Xt.indexOf("projects")},"projects"),s.jsx(rf,{},"contact")];return s.jsxs(s.Fragment,{children:[s.jsx("style",{children:Yd}),s.jsx("style",{children:`
+`;function af(v){const w=v.getContext("webgl")||v.getContext("experimental-webgl");if(!w)return null;const p=(J,X)=>{const B=w.createShader(J);return w.shaderSource(B,X),w.compileShader(B),B},C=w.createProgram();w.attachShader(C,p(w.VERTEX_SHADER,of)),w.attachShader(C,p(w.FRAGMENT_SHADER,sf)),w.linkProgram(C),w.useProgram(C);const _=w.createBuffer();w.bindBuffer(w.ARRAY_BUFFER,_),w.bufferData(w.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),w.STATIC_DRAW);const R=w.getAttribLocation(C,"a_pos");return w.enableVertexAttribArray(R),w.vertexAttribPointer(R,2,w.FLOAT,!1,0,0),{gl:w,uRes:w.getUniformLocation(C,"u_res"),uTime:w.getUniformLocation(C,"u_time"),uMouse:w.getUniformLocation(C,"u_mouse"),uSx:[0,1,2,3,4,5].map(J=>w.getUniformLocation(C,`u_sx${J}`))}}function uf(v){return[0,-.38,.38,-.38][v]??0}function cf({sectionIndex:v,loaded:w=!1}){const p=N.useRef(null),C=N.useRef(null),_=N.useRef({x:0,y:0}),R=N.useRef({x:0,y:0}),J=N.useRef(0),X=N.useRef([0,0,0,0,0,0]),B=N.useRef();return N.useEffect(()=>{J.current=uf(v)},[v]),N.useEffect(()=>{const K=p.current;C.current=af(K);const G=()=>{var $;K.width=window.innerWidth,K.height=window.innerHeight,($=C.current)==null||$.gl.viewport(0,0,K.width,K.height)};G(),window.addEventListener("resize",G);const ne=$=>{R.current={x:$.clientX,y:$.clientY}},W=$=>{R.current={x:$.touches[0].clientX,y:$.touches[0].clientY}};window.addEventListener("mousemove",ne),window.addEventListener("touchmove",W,{passive:!0});const re=[.055,.038,.028,.02,.015,.011],U=$=>{_.current.x+=(R.current.x-_.current.x)*.06,_.current.y+=(R.current.y-_.current.y)*.06;const D=X.current;D[0]+=(J.current-D[0])*re[0];for(let ee=1;ee<6;ee++)D[ee]+=(D[ee-1]-D[ee])*re[ee];const ke=C.current;if(ke){const{gl:ee,uRes:Q,uTime:I,uMouse:ue,uSx:V}=ke;ee.uniform2f(Q,K.width,K.height),ee.uniform1f(I,$*.001),ee.uniform2f(ue,_.current.x,K.height-_.current.y);for(let fe=0;fe<6;fe++)ee.uniform1f(V[fe],D[fe]);ee.drawArrays(ee.TRIANGLE_STRIP,0,4)}B.current=requestAnimationFrame(U)};return B.current=requestAnimationFrame(U),()=>{window.removeEventListener("resize",G),window.removeEventListener("mousemove",ne),window.removeEventListener("touchmove",W),cancelAnimationFrame(B.current)}},[]),s.jsx("canvas",{ref:p,style:{position:"fixed",inset:0,width:"100%",height:"100%",zIndex:0,pointerEvents:"none",willChange:"transform",transform:w?"scale(1)":"scale(3)",transition:w?"transform 1.5s cubic-bezier(0.22, 1, 0.36, 1) 0.9s":"none",transformOrigin:"center center"}})}const Xt=["hero","about","projects","contact"],Rn=900,df=950,ff=30;function pf(){const[v,w]=N.useState(!1),[p,C]=N.useState(0),[_,R]=N.useState(null),[J,X]=N.useState(1),[B,K]=N.useState(!1),[G,ne]=N.useState(!1),W=N.useRef(!1),re=N.useRef(null),U=N.useRef(0),$=N.useRef(null);N.useEffect(()=>{const Q=I=>ne(I.detail);return window.addEventListener("lock-scroll",Q),()=>window.removeEventListener("lock-scroll",Q)},[]),N.useEffect(()=>{const Q=Mo.filter(V=>V.image).map(V=>new Promise(fe=>{const be=new Image;be.onload=fe,be.onerror=fe,be.src=V.image})),I=new Promise(V=>setTimeout(V,1500)),ue=document.fonts?document.fonts.ready:Promise.resolve();Promise.all([I,ue,...Q]).then(()=>w(!0))},[]);const D=N.useCallback(Q=>{if(G)return;const I=Math.max(0,Math.min(Xt.length-1,Q));I===p||W.current||(W.current=!0,X(I>p?1:-1),R(p),C(I),K(!0),setTimeout(()=>{R(null),K(!1),W.current=!1},df))},[p,G]);N.useEffect(()=>{const Q=I=>{if(!G){if(I.preventDefault(),W.current){U.current=0,clearTimeout($.current);return}U.current+=I.deltaY,clearTimeout($.current),$.current=setTimeout(()=>{U.current=0},200),Math.abs(U.current)>=ff&&(D(p+(U.current>0?1:-1)),U.current=0)}};return window.addEventListener("wheel",Q,{passive:!1}),()=>window.removeEventListener("wheel",Q)},[D,p,G]),N.useEffect(()=>{const Q=ue=>{G||(re.current=ue.touches[0].clientY)},I=ue=>{if(G||re.current===null)return;const V=re.current-ue.changedTouches[0].clientY;Math.abs(V)>40&&D(p+(V>0?1:-1)),re.current=null};return window.addEventListener("touchstart",Q,{passive:!0}),window.addEventListener("touchend",I,{passive:!0}),()=>{window.removeEventListener("touchstart",Q),window.removeEventListener("touchend",I)}},[D,p,G]),N.useEffect(()=>{const Q=I=>{G||((I.key==="ArrowDown"||I.key==="PageDown")&&D(p+1),(I.key==="ArrowUp"||I.key==="PageUp")&&D(p-1))};return window.addEventListener("keydown",Q),()=>window.removeEventListener("keydown",Q)},[D,p,G]),N.useEffect(()=>{const Q=I=>{const ue=Xt.indexOf(I.detail);ue!==-1&&D(ue)};return window.addEventListener("snapto",Q),()=>window.removeEventListener("snapto",Q)},[D]);const ke=N.useCallback(Q=>{const I=Xt.indexOf(Q);I!==-1&&D(I)},[D]),ee=[s.jsx(Zd,{loaded:v},"hero"),s.jsx(tf,{},"about"),s.jsx(nf,{isActive:p===Xt.indexOf("projects")},"projects"),s.jsx(rf,{},"contact")];return s.jsxs(s.Fragment,{children:[s.jsx("style",{children:Yd}),s.jsx("style",{children:`
         html, body { overflow: hidden; height: 100%; }
 
         .snap-root {
