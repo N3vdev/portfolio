@@ -522,34 +522,42 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
         .btn-list-all {
           font-family: 'Syne', sans-serif; font-size: .75rem; font-weight: 700; letter-spacing: .02em;
           text-transform: uppercase; color: #fff; 
-          background: rgba(255, 255, 255, 0.03); 
-          border: 1.5px solid rgba(123, 47, 247, 0.6);
+          background: rgba(123, 47, 247, 0.15); 
+          border: 1.5px solid rgba(123, 47, 247, 0.8);
           padding: .6rem 1.4rem; border-radius: 999px; cursor: pointer;
           transition: all 0.4s cubic-bezier(0.2, 1, 0.3, 1);
-          animation: btn-glow-pulse 3s infinite ease-in-out;
           flex-shrink: 0;
           backdrop-filter: blur(10px);
           position: relative;
-          overflow: hidden;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          animation: btn-pulse 2s infinite;
         }
-        .btn-list-all:hover { 
-          background: rgba(123, 47, 247, 0.15); 
-          border-color: #fff;
-          transform: translateY(-2px) scale(1.02);
-          box-shadow: 0 8px 25px rgba(123, 47, 247, 0.4);
-        }
-        .btn-list-all:active { transform: translateY(0) scale(0.98); }
 
-        @keyframes btn-glow-pulse {
-          0%, 100% { 
-            box-shadow: 0 0 10px rgba(123,47,247,0.2), inset 0 0 0px rgba(123,47,247,0); 
-            border-color: rgba(123,47,247,0.5); 
+        @keyframes btn-pulse {
+          0% {
+            box-shadow: 0 0 0 0 rgba(123, 47, 247, 0.7);
+            transform: scale(1);
           }
-          50% { 
-            box-shadow: 0 0 25px rgba(123,47,247,0.6), inset 0 0 12px rgba(123,47,247,0.2); 
-            border-color: rgba(180,120,255,0.9); 
+          70% {
+            box-shadow: 0 0 0 12px rgba(123, 47, 247, 0);
+            transform: scale(1.03);
+          }
+          100% {
+            box-shadow: 0 0 0 0 rgba(123, 47, 247, 0);
+            transform: scale(1);
           }
         }
+
+        .btn-list-all:hover { 
+          background: rgba(123, 47, 247, 0.25);
+          border-color: #fff;
+          transform: translateY(-2px) scale(1.08);
+          animation: none; /* Stop pulse on hover for better control */
+          box-shadow: 0 8px 25px rgba(123, 47, 247, 0.6);
+        }
+        .btn-list-all:active { transform: translateY(0) scale(0.95); }
         /* ── Project List View Overlay ── */
         .p-list-view {
           position: fixed; inset: 0; z-index: 9999;
