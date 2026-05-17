@@ -1,113 +1,147 @@
 export const ROLES = ["Data Visualization", "Frontend Development", "UI/UX Designs", "Browser Extensions"];
 
 export const PROJECTS = [
-
   {
-    id: 1,
-    title: "Talentis Recruitment Website",
-    image: "Talentis.png",
+    id: 0,
+    title: "SwiftShip",
+    image: "swiftship.png",
     category: "Website",
     year: "2026",
-    description: "A high-conversion recruitment agency website built with a strong focus on visual hierarchy, trust signals, and seamless user flow. Features a full-screen modular layout, animated section reveals, interactive hiring funnel, and a fully functional lead capture modal with validation. Designed to simulate a premium hiring experience with clear process communication, service segmentation, and client testimonials.",
-    tags: ["HTML", "CSS", "JavaScript", "UI/UX", "Landing Page"],
+    description: "A professional business website for a global logistics firm. Features a streamlined interface for tracking international shipments, managing customs compliance, and generating rapid multimodal freight quotes.",
+    tags: ["Logistics", "Business Site", "Freight", "Supply Chain"],
+    color: "#7B2FF7",
+    accent: "rgba(123,47,247,0.12)",
+    border: "rgba(123,47,247,0.2)",
+    link: "https://n3vdev.github.io/Swiftship/",
+    num: "01"
+  },
+  {
+    id: 1,
+    title: "Aether Journal",
+    image: "journal.png",
+    category: "Website",
+    year: "2026",
+    description: "A minimalist digital journal exploring design and philosophy. Features a clean, editorial layout optimized for long-form essays and high-fidelity visual storytelling, reflecting a focus on intentionality and slow living.",
+    tags: ["Digital Journal", "Editorial", "Typography", "UI/UX Design"],
+    color: "#00C9A7",
+    accent: "rgba(0,201,167,0.12)",
+    border: "rgba(0,201,167,0.2)",
+    link: "https://n3vdev.github.io/Journal/",
+    num: "02"
+  },
+  {
+    id: 2,
+    title: "Nev Commerce OS",
+    image: "commerceos.png",
+    category: "Website",
+    year: "2026",
+    description: "An e-commerce management interface concept designed for store administrators. Provides a high-density overview of sales analytics, revenue tracking, and order fulfillment status in a focused, dark-themed layout.",
+    tags: ["Next.js", "Analytics", "Admin UI", "E-commerce"],
+    color: "#F59E0B",
+    accent: "rgba(245,158,11,0.12)",
+    border: "rgba(245,158,11,0.2)",
+    link: "https://n3vdev.github.io/Ecommerce-Dashboard/",
+    num: "03"
+  },
+  {
+    id: 3,
+    title: "Talentis Agency",
+    image: "Talentis.png",  
+    category: "Website",
+    year: "2026",
+    description: "A high-fidelity website for a specialized recruitment agency. Implements a premium user flow with animated section reveals, detailed service breakdowns, and an integrated funnel for candidate and client intake.",
+    tags: ["Recruitment", "Agency Site", "Interactions", "Landing Page"],
     color: "#22C55E",
     accent: "rgba(34,197,94,0.12)",
     border: "rgba(34,197,94,0.2)",
     link: "https://n3vdev.github.io/Talentis/",
-    num: "01"
+    num: "04"
   },
-
   {
-    id: 2,
-    title: "TruckVault Landing Page",
+    id: 4,
+    title: "TruckVault Logistics",
     image: "Truckvault.png",
     category: "Website",
     year: "2025",
-    description: "Optimised landing page for a Pan-India freight logistics platform. Clean hero with live tracking UI, trust signals, responsive stats grid, and smooth scroll interactions.",
-    tags: ["React", "Tailwind CSS", "Landing Page"],
+    description: "A conversion-optimized landing page for a freight logistics service. Focuses on clear service communication, featuring real-time tracking mockups, interactive stat grids, and trust-building technical specs.",
+    tags: ["Logistics", "React", "Landing Page", "Performance"],
     color: "#00C9A7",
     accent: "rgba(0,201,167,0.12)",
     border: "rgba(0,201,167,0.2)",
     link: "https://n3vdev.github.io/truckvault/",
-    num: "02"
+    num: "05"
   },
-
   {
-    id: 3,
+    id: 5,
     title: "Infinite Drive",
     image: "game.png",
     category: "Website",
     year: "2026",
-    description: "An infinite driving experience set in a minimal, atmospheric environment with calming music. Features smooth animations, immersive visuals, and a distraction-free UI focused on relaxation and flow.",
-    tags: ["Three.js", "WebGL", "Game UI"],
+    description: "An immersive, browser-based infinite driving experiment. Built with a focus on procedural generation and atmospheric audio-visuals to create a calming, low-distraction user experience.",
+    tags: ["Three.js", "WebGL", "Interactive", "Creative Coding"],
     color: "#0EA5E9",
     accent: "rgba(14,165,233,0.12)",
     border: "rgba(14,165,233,0.2)",
     link: "https://n3vdev.github.io/infinite-drive/",
-    num: "03"
+    num: "06"
   },
-
   {
-    id: 4,
-    title: "Recruitment Dashboard",
+    id: 6,
+    title: "Hiring Dashboard Design",
     image: "Figma Dashboard.png",
     category: "Figma",
-    year: "2024",
-    description: "A comprehensive recruitment analytics dashboard for HR teams. Features real-time candidate tracking, application trend analysis, and offer pipeline management — all in one view.",
-    tags: ["Figma", "Data Viz", "HR Analytics"],
+    year: "2025",
+    description: "A high-fidelity recruitment analytics concept designed in Figma. Maps out complex data hierarchies for tracking application trends, candidate pipelines, and departmental hiring velocity.",
+    tags: ["Figma", "Data Visualization", "HR Concepts", "UI Design"],
     color: "#A855F7",
     accent: "rgba(168,85,247,0.12)",
     border: "rgba(168,85,247,0.2)",
-    num: "04"
+    link: "https://www.figma.com/design/wQv2zexn2WggTxbhzlJyrm/Nevin-Co?node-id=0-1&t=FttxAjn8o2kRdf8x-1",
+    num: "07"
   },
-
   {
-    id: 5,
+    id: 7,
     title: "Keyword Highlighter",
     image: "KH.png",
     category: "Chrome Extension",
-    year: "2024",
-    description: "A browser extension that highlights configurable keyword groups across any webpage in real-time. Toggle groups on/off, import/export settings, works instantly with Manifest V3.",
-    tags: ["Chrome Extension", "JavaScript", "Manifest V3"],
+    year: "2026",
+    description: "A productivity tool that highlights user-defined keyword groups across web pages in real-time. Supports instant group toggling and configuration persistence using Manifest V3 standards.",
+    tags: ["Chrome Extension", "JavaScript", "Manifest V3", "Productivity"],
     color: "#E85D7A",
     accent: "rgba(232,93,122,0.12)",
     border: "rgba(232,93,122,0.2)",
     link: "https://chromewebstore.google.com/detail/multi-keyword-highlighter/onnipamlflmhobjelheonbddcbmgfnco",
-    num: "05"
+    num: "08"
   },
-
   {
-    id: 6,
-    title: "Sales Overview Dashboard",
+    id: 8,
+    title: "Regional Sales Analytics",
     image: "PBI.jpg",
     category: "Power BI",
-    year: "2024",
-    description: "A full-featured sales analytics solution tracking revenue trends, product performance, return rates, and regional insights — built on a dark, high-contrast theme for executive clarity.",
-    tags: ["Power BI", "DAX", "Sales Analytics"],
+    year: "2025",
+    description: "An executive-level sales dashboard focused on regional revenue insights. Tracks year-over-year growth and product performance with a high-contrast theme for data clarity.",
+    tags: ["Power BI", "Data Analytics", "Sales Insights", "DAX"],
     color: "#4F8EF7",
     accent: "rgba(79,142,247,0.12)",
     border: "rgba(79,142,247,0.2)",
     link: "#",
-    num: "06"
+    num: "09"
   },
-
   {
-    id: 7,
+    id: 9,
     title: "Button Dodger",
     image: "getrekt.png",
     category: "Chrome Extension",
-    year: "2025",
-    description: "A playful browser extension that makes buttons dodge your cursor, turning simple clicks into a hilarious challenge. Perfect for pranking friends and adding chaos to everyday browsing.",
-    tags: ["JavaScript", "Chrome Extension", "UI Manipulation"],
+    year: "2026",
+    description: "A specialized browser extension that manipulates DOM elements to dodge user interaction. Designed to experiment with real-time cursor tracking and dynamic positioning logic.",
+    tags: ["JavaScript", "Chrome Extension", "DOM Manipulation", "Logic"],
     color: "#F97316",
     accent: "rgba(249,115,22,0.12)",
     border: "rgba(249,115,22,0.2)",
     link: "https://chromewebstore.google.com/detail/get-rekt/fghnhikhkjncimoiipnbpbjcbkpalljg",
-    num: "07"
+    num: "10"
   }
-
 ];
-
 
 export const SERVICES = [
   { number: "01", title: "Data Visualization", description: "Power BI & Looker Studio dashboards built for real decisions. KPI tracking, drill-through reports, executive summaries.", tags: ["Power BI", "Looker Studio", "DAX", "SQL"], accent: "#4F8EF7" },
@@ -121,6 +155,7 @@ export const CAT_COLORS = {
   "Chrome Extension":{ bg: "rgba(232,93,122,0.1)",  border: "rgba(232,93,122,0.22)", text: "#E85D7A"  },
   "Figma":           { bg: "rgba(168,85,247,0.1)",  border: "rgba(168,85,247,0.22)",  text: "#A855F7"  },
   "Frontend Dev":    { bg: "rgba(0,201,167,0.1)",   border: "rgba(0,201,167,0.22)",   text: "#00C9A7"  },
+  "Website":         { bg: "rgba(123,47,247,0.1)",  border: "rgba(123,47,247,0.22)",  text: "#7B2FF7"  },
 };
 
 export function getCatStyle(cat) {

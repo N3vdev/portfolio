@@ -54,12 +54,12 @@ export default function Hero({ loaded = false }) {
           70%  { box-shadow: 0 0 0 8px rgba(61,219,133,0); }
           100% { box-shadow: 0 0 0 0   rgba(61,219,133,0); }
         }
-        .h-status-txt { font-family: 'MDMono', monospace; font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); }
+        .h-status-txt { font-family: 'MDMono', monospace; font-size: .7rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.28); }
         .h-status-txt b { color: #3DDB85; font-weight: 500; }
         .h-name {
           font-family: 'Syne', sans-serif;
           font-size: clamp(2.8rem, 12vw, 8.8rem);
-          font-weight: 800; line-height: .88; letter-spacing: -.045em; color: #fff;
+          font-weight: 800; line-height: .99; letter-spacing: -.045em; color: #fff;
           margin-bottom: 3rem;
           opacity: 0; transform: translateY(28px);
           transition: opacity .88s cubic-bezier(.22,1,.36,1) .16s, transform .88s cubic-bezier(.22,1,.36,1) .16s;
@@ -73,7 +73,7 @@ export default function Hero({ loaded = false }) {
         }
         .h-role.on { opacity: 1; transform: translateY(0); }
         .h-divider { width: 26px; height: 1px; background: rgba(255,255,255,.11); flex-shrink: 0; }
-        .h-role-txt { font-family: 'DM Mono', monospace; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.35); }
+        .h-role-txt { font-family: 'DM Mono', monospace; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.75); }
         .h-role-txt-bold { font-family: 'DM Mono', monospace; font-size: .76rem; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.7); font-weight: 500; }
         .h-cur {
           display: inline-block; width: 7px; height: .8em; background: #7B2FF7;
@@ -108,11 +108,15 @@ export default function Hero({ loaded = false }) {
         }
         @keyframes scr { 0% { height: 0; top: 0; } 50% { height: 40px; top: 0; } 100% { height: 0; top: 40px; } }
         .sc-lbl { font-family: 'DM Mono', monospace; font-size: .56rem; letter-spacing: .2em; text-transform: uppercase; color: rgba(255,255,255,.14); writing-mode: vertical-lr; }
+        @media(max-width:1100px) {
+          .hc { gap: 2rem; }
+          .h-name { font-size: clamp(3rem, 10vw, 6rem); }
+        }
         @media(max-width:800px) {
           .hc { grid-template-columns: 1fr; gap: 2rem; padding: 0 1.5rem; text-align: center; }
           .h-scroll { display: none; }
-          .h-name { font-size: clamp(3rem, 10vw, 5rem); line-height: .92; margin-bottom: 2rem; }
-          .h-status { margin-bottom: 1.5rem; justify-content: center; }
+          .h-name { font-size: clamp(3rem, 10vw, 5rem); line-height: 1; margin-bottom: 2rem; }
+          .h-status { margin-bottom: 1.5rem;  justify-content: center;  }
           .h-role { margin-bottom: 1.5rem; justify-content: center; }
           .h-cta { justify-content: center; }
           .h-role-txt { font-size: .68rem; }

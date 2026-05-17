@@ -155,10 +155,18 @@ export default function App() {
   const [prevIdx, setPrevIdx]     = useState(null);
   const [dir, setDir]             = useState(1);
   const [transitioning, setTransitioning] = useState(false);
+  const [isLocked, setIsLocked]   = useState(false);
   const cooldown  = useRef(false);
   const touchY    = useRef(null);
   const wheelAcc  = useRef(0);
   const wheelTimer= useRef(null);
+
+  // ── Lock scroll listener ──────────────────────────
+  useEffect(() => {
+    const onLock = e => setIsLocked(e.detail);
+    window.addEventListener("lock-scroll", onLock);
+    return () => window.removeEventListener("lock-scroll", onLock);
+  }, []);
 
   // ── Loader: preload all project images + fonts dynamically ──
   // Just add a new entry to PROJECTS in data/index.js — this picks it up automatically
@@ -179,6 +187,7 @@ export default function App() {
   }, []);
 
   const goTo = useCallback((next) => {
+    if (isLocked) return;
     const clamped = Math.max(0, Math.min(SECTIONS.length - 1, next));
     if (clamped === idx || cooldown.current) return;
     cooldown.current = true;
@@ -191,15 +200,13 @@ export default function App() {
       setTransitioning(false);
       cooldown.current = false;
     }, COOLDOWN_MS);
-  }, [idx]);
+  }, [idx, isLocked]);
 
   // Wheel
   useEffect(() => {
     const onWheel = (e) => {
+      if (isLocked) return;
       e.preventDefault();
-      // During cooldown, drain the accumulator so trackpad momentum
-      // events don't silently build up and fire a second jump the
-      // instant the cooldown expires.
       if (cooldown.current) {
         wheelAcc.current = 0;
         clearTimeout(wheelTimer.current);
@@ -215,13 +222,16 @@ export default function App() {
     };
     window.addEventListener("wheel", onWheel, { passive: false });
     return () => window.removeEventListener("wheel", onWheel);
-  }, [goTo, idx]);
+  }, [goTo, idx, isLocked]);
 
   // Touch
   useEffect(() => {
-    const onStart = e => { touchY.current = e.touches[0].clientY; };
+    const onStart = e => { 
+      if (isLocked) return;
+      touchY.current = e.touches[0].clientY; 
+    };
     const onEnd   = e => {
-      if (touchY.current === null) return;
+      if (isLocked || touchY.current === null) return;
       const dy = touchY.current - e.changedTouches[0].clientY;
       if (Math.abs(dy) > 40) goTo(idx + (dy > 0 ? 1 : -1));
       touchY.current = null;
@@ -232,17 +242,18 @@ export default function App() {
       window.removeEventListener("touchstart", onStart);
       window.removeEventListener("touchend",   onEnd);
     };
-  }, [goTo, idx]);
+  }, [goTo, idx, isLocked]);
 
   // Keyboard
   useEffect(() => {
     const onKey = e => {
+      if (isLocked) return;
       if (e.key === "ArrowDown" || e.key === "PageDown") goTo(idx + 1);
       if (e.key === "ArrowUp"   || e.key === "PageUp")   goTo(idx - 1);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [goTo, idx]);
+  }, [goTo, idx, isLocked]);
 
   // snapto — fired by child components
   useEffect(() => {
@@ -398,6 +409,8 @@ export default function App() {
       <div style={{
         opacity: loaded ? 1 : 0,
         transition: "opacity 0.6s ease",
+        position: "relative",
+        zIndex: isLocked ? 0 : 1000,
       }}>
         <Navbar active={SECTIONS[idx]} onNav={navGoTo} />
       </div>
@@ -406,6 +419,7 @@ export default function App() {
       <div className="snap-root" style={{
         opacity: loaded ? 1 : 0,
         transition: "opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1)",
+        zIndex: isLocked ? 2000 : 0,
       }}>
         {sections.map((section, i) => {
           const isActive = i === idx;

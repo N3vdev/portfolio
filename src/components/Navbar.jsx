@@ -5,6 +5,7 @@ const LINKS = ["home", "about", "projects"];
 export default function Navbar({ active, onNav }) {
   const [sc, setSc]   = useState(false);
   const [open, setOpen] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
   const linksRef = useRef(null);
   const itemRefs = useRef({});
   const [ind, setInd] = useState({ x: 0, w: 0, ready: false });
@@ -13,6 +14,12 @@ export default function Navbar({ active, onNav }) {
     const h = () => setSc(window.scrollY > 50);
     window.addEventListener("scroll", h);
     return () => window.removeEventListener("scroll", h);
+  }, []);
+
+  useEffect(() => {
+    const handleLock = (e) => setIsHidden(e.detail);
+    window.addEventListener("lock-scroll", handleLock);
+    return () => window.removeEventListener("lock-scroll", handleLock);
   }, []);
 
   // Measure active item and slide indicator to it
@@ -170,7 +177,12 @@ export default function Navbar({ active, onNav }) {
         @media(max-width:660px) { .nlinks, .ncta { display: none; } .nburg { display: block; } }
       `}</style>
 
-      <nav className={`nav${sc ? " sc" : ""}`}>
+      <nav className={`nav${sc ? " sc" : ""}`} style={{
+        opacity: isHidden ? 0 : 1,
+        pointerEvents: isHidden ? "none" : "auto",
+        zIndex: isHidden ? 0 : 1000,
+        transition: "opacity 0.3s ease"
+      }}>
         <div className="nav-pill">
           <div className="nlogo" onClick={() => go("hero")}>
             <div className="nlogo-dot" />

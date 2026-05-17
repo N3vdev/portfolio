@@ -1,55 +1,124 @@
+import { useState, useEffect } from "react";
+
 export default function Loader({ done }) {
+  const [progress, setProgress] = useState(0);
+
+  useEffect(() => {
+    if (done) {
+      setProgress(100);
+      return;
+    }
+    const interval = setInterval(() => {
+      setProgress(prev => {
+        if (prev >= 95) return prev;
+        return prev + Math.floor(Math.random() * 5) + 1;
+      });
+    }, 150);
+    return () => clearInterval(interval);
+  }, [done]);
+
   return (
     <>
       <style>{`
         .ldr {
           position: fixed; inset: 0; z-index: 9999;
-          background: linear-gradient(135deg, #0d001f 0%, #3b0d82 40%, #7B2FF7 72%, #c084fc 100%);
-          display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem;
-          pointer-events: none;
-          /* 5-point polygon: top-left corner duplicated as first + last point so
-             the diagonal sweep can split them apart during the exit transition */
+          background: #060609;
+          display: flex; flex-direction: column; align-items: center; justify-content: center;
+          pointer-events: all;
           clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 0%);
-          transition: clip-path 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+          transition: clip-path 1.2s cubic-bezier(0.85, 0, 0.15, 1);
+          overflow: hidden;
         }
-        /* Exit: first point races to the right, last point races downward —
-           together they create a diagonal line that sweeps top-left → bottom-right */
         .ldr.done {
-          clip-path: polygon(210% 0%, 100% 0%, 100% 100%, 0% 100%, 0% 210%);
+          clip-path: polygon(100% 0%, 100% 0%, 100% 100%, 100% 100%, 100% 0%);
+          pointer-events: none;
         }
 
-        .ldr-bars {
-          display: flex; align-items: flex-end; gap: 6px; height: 54px;
+        /* ── Modern Ring ── */
+        .ldr-ring {
+          position: relative;
+          width: 180px; height: 180px;
+          display: flex; align-items: center; justify-content: center;
+          margin-bottom: 2rem;
         }
-        .ldr-bar {
-          width: 5px; border-radius: 3px; background: rgba(0,0,0,0.75);
-          animation: lbar 1s ease-in-out infinite;
+        .ldr-ring-svg {
+          position: absolute; inset: 0;
+          transform: rotate(-90deg);
         }
-        /* Each bar's max height grows left → right (small to big) */
-        .ldr-bar:nth-child(1) { --mh: 12px; animation-delay: 0s;    }
-        .ldr-bar:nth-child(2) { --mh: 22px; animation-delay: 0.12s; }
-        .ldr-bar:nth-child(3) { --mh: 34px; animation-delay: 0.24s; }
-        .ldr-bar:nth-child(4) { --mh: 44px; animation-delay: 0.36s; }
-        .ldr-bar:nth-child(5) { --mh: 54px; animation-delay: 0.48s; }
+        .ldr-ring-base {
+          fill: none;
+          stroke: rgba(123, 47, 247, 0.05);
+          stroke-width: 2;
+        }
+        .ldr-ring-progress {
+          fill: none;
+          stroke: #7B2FF7;
+          stroke-width: 2;
+          stroke-linecap: round;
+          stroke-dasharray: 502; /* 2 * PI * 80 */
+          stroke-dashoffset: ${502 - (502 * progress) / 100};
+          transition: stroke-dashoffset 0.4s cubic-bezier(0.2, 1, 0.3, 1);
+          filter: drop-shadow(0 0 10px rgba(123, 47, 247, 0.6));
+        }
 
-        @keyframes lbar {
-          0%, 100% { height: 5px;        opacity: 0.35; }
-          50%       { height: var(--mh); opacity: 1;    }
+        .ldr-num {
+          font-family: 'DM Mono', monospace;
+          font-size: 2.8rem; font-weight: 300;
+          color: #fff; letter-spacing: -0.05em;
+          display: flex; align-items: baseline;
         }
+        .ldr-num span { font-size: 1rem; opacity: 0.3; margin-left: 2px; }
 
-        .ldr-txt {
+        /* ── Staggered Loading Text ── */
+        .ldr-txt-wrap {
+          display: flex; gap: 0.4rem;
+        }
+        .ldr-char {
           font-family: 'Syne', sans-serif;
-          font-size: 1rem; font-weight: 700;
-          letter-spacing: 0.3em; text-transform: uppercase;
-          color: #000;
+          font-size: 0.7rem; font-weight: 700;
+          letter-spacing: 0.4em; text-transform: uppercase;
+          color: rgba(255, 255, 255, 0.4);
+          animation: char-glow 2s infinite;
+          animation-delay: var(--d);
+        }
+        @keyframes char-glow {
+          0%, 100% { color: rgba(255, 255, 255, 0.2); transform: translateY(0); filter: blur(0); }
+          50% { color: #fff; transform: translateY(-3px); filter: drop-shadow(0 0 5px #7B2FF7); }
+        }
+
+        /* ── Background Subtle Glow ── */
+        .ldr-glow {
+          position: absolute;
+          width: 400px; height: 400px;
+          background: radial-gradient(circle, rgba(123, 47, 247, 0.12) 0%, transparent 70%);
+          border-radius: 50%;
+          filter: blur(50px);
+          animation: bg-pulse 4s infinite alternate ease-in-out;
+        }
+        @keyframes bg-pulse {
+          from { transform: scale(1); opacity: 0.5; }
+          to { transform: scale(1.3); opacity: 0.8; }
         }
       `}</style>
 
       <div className={`ldr${done ? " done" : ""}`}>
-        <div className="ldr-bars">
-          {[1,2,3,4,5].map(i => <div key={i} className="ldr-bar" />)}
+        <div className="ldr-glow" />
+        
+        <div className="ldr-ring">
+          <svg className="ldr-ring-svg" viewBox="0 0 180 180">
+            <circle className="ldr-ring-base" cx="90" cy="90" r="80" />
+            <circle className="ldr-ring-progress" cx="90" cy="90" r="80" />
+          </svg>
+          <div className="ldr-num">
+            {progress}<span>%</span>
+          </div>
         </div>
-        <div className="ldr-txt">Loading</div>
+
+        <div className="ldr-txt-wrap">
+          {"LOADING".split("").map((c, i) => (
+            <span key={i} className="ldr-char" style={{ "--d": `${i * 0.1}s` }}>{c}</span>
+          ))}
+        </div>
       </div>
     </>
   );

@@ -45,7 +45,7 @@ body { background: #060609; color: #fff; overflow-x: hidden; font-family: 'DM Sa
 
 .eyebrow {
   font-family: 'DM Mono', monospace; font-size: .63rem; letter-spacing: .22em;
-  text-transform: uppercase; color: rgba(255,255,255,.26);
+  text-transform: uppercase; color: rgba(255,255,255,.60);
   display: inline-flex; align-items: center; gap: .6rem;
 }
 .eyebrow::before { content: ''; width: 16px; height: 1px; background: rgba(255,255,255,.14); display: block; }
